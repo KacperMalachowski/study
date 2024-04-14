@@ -3,8 +3,8 @@ import numpy as np
 
 df = pd.read_csv("./Occupancy_Estimation.csv")
 
-column_name1 = 'S1_Temp'
-column_name2 = 'S3_Temp'
+column_name1 = 'S4_Sound'
+column_name2 = 'S5_CO2_Slope'
 
 num_values_to_replace = int(0.05 * len(df))
 
