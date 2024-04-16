@@ -1,32 +1,23 @@
-# import numpy as np
-# import matplotlib.pyplot as plt
-
-# runs = 100000
-# xs = np.random.uniform(-0.5, 0.5, runs)
-# ys = np.random.uniform(-0.5, 0.5, runs)
-# in_circle = xs**2 + ys**2 <= 0.5**2
-# mc_pi = (np.sum(in_circle) / runs) * 4
-
-# plt.scatter(xs, ys, c=np.where(in_circle, 'blue', 'grey'), marker='.', edgecolors='none')
-# plt.axis('equal')
-# plt.title(f"MC Approximation of Pi = {mc_pi}")
-# plt.xlabel('')
-# plt.ylabel('')
-# plt.show()
-
 import numpy as np
 import matplotlib.pyplot as plt
+import simulation as sim
 
-runs = 100000
+min_runs = 100000
+increase = 10000
+max_runs = 1000000
+pi_value = 3.14159265
 
-xs = np.random.uniform(-0.5, 0.5, runs)
-ys = np.random.uniform(-0.5, 0.5, runs)
-inCircle = xs**2 + ys**2 <= 0.5**2
-mcPi = (np.sum(inCircle) / runs) * 4
+results = {}
 
-plt.scatter(xs, ys, c=np.where(inCircle, 'blue', 'grey'), marker='.', edgecolors='none')
-plt.axis('equal')
+for runs in range(min_runs, max_runs, increase):
+  mc_pi = sim.monte_carlo_pi_aproximation(runs)
+  results[runs] = abs(mc_pi - pi_value)
+
+linear_regression = np.polyfit(list(results.keys()), list(results.values()), 1)
+
+plt.scatter(results.keys(), results.values())
+plt.plot(results.keys(), np.polyval(linear_regression, list(results.keys())), color="red")
 plt.title("Zadanie 1 - Błąd aproksymacji")
 plt.xlabel("Rozmiar próbki")
 plt.ylabel("Błąd aproksymacji")
-plt.show()
+plt.savefig("../images/pi_aproximation_based_on_sample_size.png")

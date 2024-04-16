@@ -145,9 +145,78 @@ Należy zmodyfikować kod dla aproksymacji stałej $\pi$, aby sprawdzić jak roz
 
 \subsection*{Rozwiązanie}
 
+Symulacja została zaprogramowana w języku Python, jako funkcja\\ 'monte\_carlo\_pi\_aproximation' w pliku 'simulation.py'.
+Kod tej symulacji przedstawiono poniżej.
+\begin{verbatim}
+  def monte_carlo_pi_aproximation(runs):
+    xs = np.random.uniform(-0.5, 0.5, runs)
+    ys = np.random.uniform(-0.5, 0.5, runs)
+    inCircle = xs**2 + ys**2 <= 0.5**2
+
+    mcPi = (np.sum(inCircle) / runs) * 4
+
+    return mcPi
+\end{verbatim}
+Funkcja ta przyjmuje parameter "runs" określający ilość punktów jakie mają być wygenerowane na potrzeby symulacji.
+
+Generuje ona za pomocą metody z pakietu "numpy" losowe punkty w zakresie od $-0.5$ do $0.5$ dla osi "x" oraz osi "y". Ilość punktów wyznacza wartość "runs".
+
+Następnie funkcja wyznacza listę wartosci prawda/fałsz, określajacy obecnosć danego punktu w okręgu.
+
+Dla stworzenia wynikowego wykresu zaimplementowano ponadto skrypt do uruchamiania symulacji dla różnych wielkości próbek, kod umieszczono poniżej.
+
+\begin{verbatim}
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import simulation as sim
+
+  min_runs = 100000
+  increase = 10000
+  max_runs = 1000000
+  pi_value = 3.14159265
+
+  results = {}
+
+  for runs in range(min_runs, max_runs, increase):
+    mc_pi = sim.monte_carlo_pi_aproximation(runs)
+    results[runs] = abs(mc_pi - pi_value)
+
+  linear_regression = np.polyfit(
+    list(results.keys()), 
+    list(results.values()), 
+    1
+  )
+
+  plt.scatter(results.keys(), results.values())
+  plt.plot(
+    results.keys(), 
+    np.polyval(linear_regression, list(results.keys())), 
+    color="red"
+  )
+  plt.title("Zadanie 1 - Błąd aproksymacji")
+  plt.xlabel("Rozmiar próbki")
+  plt.ylabel("Błąd aproksymacji")
+  plt.savefig("../images/pi_aproximation_based_on_sample_size.png")
+\end{verbatim}
+
+W ramach tego skryptu tworzona jest mapa, której kluczami jest ilość próbek w symulacji, a wartościami wyliczony błąd aproksymacji.
+
+Pondato skrypt ten oblicza i nanosi na wykres linie przedstawiajacą regresje liniową wyników.
+
+\newpage
 \subsection*{Wyniki}
 
+Ostatecznie uzyskany wykres przedstawiono poniżej.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.75\textwidth]{pi_aproximation_based_on_sample_size.png}
+\end{figure}
+Dzięki naniesieniu regresji liniowej, widać spadkowy trend błędu aproksymacji wraz ze wzrostem ilości próbek. Ze względu na ilość danych, nie przedstawiono natomiast numerycznych wartości dla każdej próby.
+
 \subsection*{Wnioski}
+
+Wyniki przeprowadzonego zadania pozwalają wysnuć wniosek iż większa liczba próbek znacząco zmniejsza błąd aproksymacji. Szczególnie widoczne jest to na zamieszczonym w ramach zadania wykresie. Naniesione wyniki zarysowują w jaki sposób ilość próbek wpływa na obliczony błąd aproksymacji. W celu lepszego zilustrowania trendu wyników została dodana linia regresu liniowego. 
+
 
 \chapter*{Zadanie 2}
 
