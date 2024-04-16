@@ -161,7 +161,7 @@ Funkcja ta przyjmuje parameter "runs" określający ilość punktów jakie mają
 
 Generuje ona za pomocą metody z pakietu "numpy" losowe punkty w zakresie od $-0.5$ do $0.5$ dla osi "x" oraz osi "y". Ilość punktów wyznacza wartość "runs".
 
-Następnie funkcja wyznacza listę wartosci prawda/fałsz, określajacy obecnosć danego punktu w okręgu.
+Następnie funkcja wyznacza listę wartości prawda/fałsz, określających obecność danego punktu w okręgu.
 
 Dla stworzenia wynikowego wykresu zaimplementowano ponadto skrypt do uruchamiania symulacji dla różnych wielkości próbek, kod umieszczono poniżej.
 
@@ -201,7 +201,7 @@ Dla stworzenia wynikowego wykresu zaimplementowano ponadto skrypt do uruchamiani
 
 W ramach tego skryptu tworzona jest mapa, której kluczami jest ilość próbek w symulacji, a wartościami wyliczony błąd aproksymacji.
 
-Pondato skrypt ten oblicza i nanosi na wykres linie przedstawiajacą regresje liniową wyników.
+Ponadto skrypt ten oblicza i nanosi na wykres linie przedstawiającą regresje liniową wyników.
 
 \newpage
 \subsection*{Wyniki}
@@ -253,7 +253,7 @@ Funkcja ta przyjmuje trzy parametry:
 
 Generuje ona za pomocą metody z pakietu "numpy" losowe punkty w zakresie od 0 do "a" dla osi "x" oraz od 0 do "b" dla osi "y". Ilość punktów wyznacza wartość "runs".
 
-Nastepnie funkcja tworzy listę wartości prawda/fałsz określającą przynależnosć poszczególnych punktów do figury. Granice figury od dołu wyznacza oś "x", od góry natomiast jest ona ograniczona trzema funkcjami linowymi:
+Nastepnie funkcja tworzy listę wartości prawda/fałsz określającą przynależność poszczególnych punktów do figury. Granice figury od dołu wyznacza oś "x", od góry natomiast jest ona ograniczona trzema funkcjami linowymi:
 
 \begin{itemize}
   \item dla $x <= 2$ funkcją $y = x$
@@ -261,7 +261,7 @@ Nastepnie funkcja tworzy listę wartości prawda/fałsz określającą przynale�
   \item dla $x > 6$ funkcją $y = -(x/2) + 4$
 \end{itemize}
 
-W ostatnim etapie funkcja ta używajac symulacji Monte Carlo wyznacza przybliżoną powierzchnię figury.
+W ostatnim etapie funkcja ta używając symulacji Monte Carlo wyznacza przybliżoną powierzchnię figury.
 
 \subsection*{Wyniki}
 
@@ -287,7 +287,7 @@ Na początek wyliczono prawidłową wartość stosując zasady matematyczne i dz
 
 Ostatecznie po zsumowaniu otrzymano wynik $P = P_1 + P_2 + P_3 + P_4 = 4 + 2 + 2 + 1 = 9$, który stanowić będzie punkt odniesienia dla oceny aproksymacji.
 
-Dla pojedynczego przebiegu symulacji uzyskano wynik $mc\_area = 8.9438$ co przedstawiono na ponizszym rysunku. Zatem błąd aproksymacji dla 100000 punktów wynosi $\epsilon = 9 - 8.9438 = 0.0562$
+Dla pojedynczego przebiegu symulacji uzyskano wynik $mc\_area = 8.9438$ co przedstawiono na poniższym rysunku. Zatem błąd aproksymacji dla 100000 punktów wynosi $\epsilon = 9 - 8.9438 = 0.0562$
 
 \begin{figure}[H]
   \centering
