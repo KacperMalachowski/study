@@ -1,0 +1,2 @@
+Simulation count: 100
+Standard deviation: 0.024064594460742418
