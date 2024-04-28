@@ -187,6 +187,50 @@ Ponizej przedstawiono zdjęcie projektu z programu Rapid Miner.
 
 \subsection*{Opis składowych projektu}
 
+Projekt podzielono na dwa procesy, jeden wczytujący dane z pliku .csv do lokalnego repozytorium oraz drugi określający skuteczność dla poszczególnego przygotowania danych.
+
+\subsubsection*{Wczytanie danych do repozytorium}
+
+Dane zostały wstępnie przygotowane poprzez usunięcie ok. 9.5\% danych z dwóch kolumn.
+Były to kolumny S4\_Sound oraz S5\_CO2\_Slope, wykonano to z uwagi na fakt, że dane źródłowe nie posiadały brakujących wartości. Dane zostały usunięte przy pomocy specjalnie przygotowanego skryptu w języku python, dla zapewnienia losowości.
+
+Proces wczytania danych składa się z trzech operatorów:
+
+\begin{itemize}
+  \item Read CSV - w którym ustawiono ścieżkę do pliku z brakujacymi danymi znajdującego się na lokalnym dysku. Jako separator kolumn pozostawiono domyślny przecinek, pozostałych opcji również nie modyfikowano. W procesie wczytywania danych wykluczono kolumny odpowiedzialne za datę i czas oraz zmieniono typ kolumny "Room Occupancy Count" na polynominal z domyślnej liczby całkowitej.
+  \item Set Role - operator służy to ustawienia roli kolumny "Room Occupancy Count" na wartość label.
+  \item Store - W operatorze ustawiono ścieżkę zapisu danych w lokalnym repozytorium dla rapid minera.
+\end{itemize}
+
+\subsubsection*{Proces przygotowania i analizy danych}
+
+Omówienie parametrów dla tego procesu zostanie podzielone na dwie części, pierwszą wspólną dla wszystkich ścieżek obejmujacą wczytanie danych z repozytorium i ich walidacje oraz drugą charakterystyczną dla poszczególnych ścieżek polegającą na przygotowaniu danych.
+
+Pierwszym wspólnym elementem dla wszystkich ścieżek jest wczytanie danych, którego jedyną ustawioną opcją jest ścieżka do danych w lokalnym repozytorium programu Rapid Miner.
+
+Kolejnymi elementami wspólnymi dla wszystkich ścieżek jest złożony operator pętli. W operatorze tym ustawiono liczbę iteracji na 20. Natomiast wewnatrz tego operatora znajduje się operator walidacji krzyżowej z wartością wykonań ustawioną na 10. Podział próbek wykonywany jest automatycznie.
+
+W sekcji treningowej umieszczono model drzewa decyzyjnego z kryterium ustawionym na "gain\_ratio" z maksymalną głębokoscią ustawioną na 10. "Confidence" ustawiono na 0.1, "minimal gain" na 0.01, a minimalnawielkosć liścia na 2.
+
+W sekcji testowej, umieszczono operator apply model otrzymujący wytrenowany model oraz dane testowe. Pondato umieszczono tutaj również operator "Prefromance" obliczajacy skuteczność modelu.
+
+Za pętlą umieszczono jeszcze dwa operatory, pierwszy "multiply" powiela wyniki z pętli, jedne trafiają bezposrednio na wyjście. Drugie zaś trafiają do operatora "Average", który oblicza średnią dokładność z otrzymanych 20 iteracji pętli.
+
+Pierwsza ścieżka stanowi punkt odniesienia dla pozostałych i nie zawiera operatorów przygotowywujących dane.
+
+Druga ścieżka do przygotowania danych używa operatora "Replace Missing Values", który działa na wszystkich atrybutach ("attrubute filter type" ustawiony na "all") oraz używa średniej wartości do zastąpienia brakujacych wartości. Drugim krokiem jest normalizacja wszystkich atrybutów ("atrubute filter type" ustawiony na "all").
+
+Trzecia ścieżka używa również operatora "Replace Missing Values" na wszystkich atrybutach, ale zamiast sredniej zastępuje je zerami. Ponadto używa dyskretyzacji z parametrami "attribute filter type" ustawionym na "all" oraz "number of bins" ustawionym na 2.
+
+Czwarta ścieżka również używa operatora "replace Missing Values" dla wszystkich atrybutów, ale używa wartości maksymalnej do zastąpienia brakujacych wartości.
+Pondato przeprowadzona ona dyskretyzacje na kolumnie "S1\_Light" ("attribute filter type" z wartoscią "single" oraz "attribute" z wartością "S1\_Light") z domyślną wartością atrybutu "number of bins".
+
+Piąta ścieżka podobnie jak poprzednie używa operatora "Replace Missing Values" to zastąpienia brakujących wartości, ale zastępuje je wartościami minimalnymi. Podobnie jak w ścieżce czwartej następuje dyskretyzacja na pojedynczej kolumnie, z tą różnicą że jest to kolumna "S5\_CO2".
+
+Szósta ścieżka używa operatora "Handle Unknown Values" z parametrem "attribute filter type" ustawionym na "all". Ponadto używa ona normalizacji również z parametrem "attribute filter type" ustawionym na "all".
+
+Siódma ścieżka używa operatora "Handle Unknown Values" z takimi samymi parametrami jak ścieżka szósta, ale używa dyskretyzacji z parametrami "attribute filter type" z wartoscią "all" oraz "number of bins" z wartością 2.
+
 \begin{landscape}
 \thispagestyle{mylandscape}
 \chapter*{Wyniki walidacji krzyżowej}
@@ -209,4 +253,15 @@ W poniższej tabeli przedstawiono wyniki walidacji krzyżowej dla poszczególnyc
   \end{table}
 
 \end{landscape}
+
+\chapter*{Wnioski}
+
+Jak można zobaczyć po wynikach walidacji modelu, najlepszy wynik uzyskano na ścieżkach nr 2 oraz 5. Na podsatwie powyższych wyników, stwierdzić można że przygotowanie danych wykazuje poprawę względem danych nieprzygotowanych, a dyskretyzacja przy odpowiednio dobranej kolumnie danych pozwala uzyskać lepsze wyniki niż możnaby uzyskać przy pomocy normalizacji.
+
+Zwrócić należy uwagę na fakt, że dyskretyzacja znacząco pogorszyła ocenę jakości w przypadku gdy brakujace wartości zastąpiono zerami. W pozostałych przypadkach natomiast wartości te nie odbiegają znacząco od siebie.
+
+Pondato na podstawie powyższych danych wysnuć należy wniosek, że odpowiedni dobór atrybutów poddanych dyskretyzacji pozwala uzyskać lepsze wyniki niż przeprowadzenie dyskretyzacji na całym zbiorze atrybutów.
+
+Ostatecznie przygotowanie danych przed ich wykorzystaniem pozwala uzyskać znacząco lepsze rezultaty niż korzystanie z danych surowych. W świecie cyfryzacji, przygotowanie nawet dużych zbiorów danych nie stanowi zazwyczaj wyzwania. Przynajmniej nie stanowi wyzwania, które usprawiedliwia wykorzystanie surowego zbioru danych podczas analizy.
+
 \end{document}
