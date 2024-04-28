@@ -141,8 +141,13 @@
   \large
   Autorzy:\\
   Kacper Małachowski\\
-  grupa 3, I rok\\[25mm]
 \end{flushright}
+\vspace*{\fill}
+\begin{center}
+  Informatyka II Stopnia\\
+  Lato 2023/2024\\
+  I rok, grupa 3\\[25mm]
+\end{center}
 
 \chapter*{Źródło danych}
 
@@ -193,7 +198,7 @@ Projekt podzielono na dwa procesy, jeden wczytujący dane z pliku .csv do lokaln
 
 Dane zostały wstępnie przygotowane poprzez usunięcie ok. 9.5\% danych z dwóch kolumn.
 Były to kolumny S4\_Sound oraz S5\_CO2\_Slope, wykonano to z uwagi na fakt, że dane źródłowe nie posiadały brakujących wartości. Dane zostały usunięte przy pomocy specjalnie przygotowanego skryptu w języku python, dla zapewnienia losowości.
-
+\newpage
 Proces wczytania danych składa się z trzech operatorów:
 
 \begin{itemize}
@@ -204,17 +209,17 @@ Proces wczytania danych składa się z trzech operatorów:
 
 \subsubsection*{Proces przygotowania i analizy danych}
 
-Omówienie parametrów dla tego procesu zostanie podzielone na dwie części, pierwszą wspólną dla wszystkich ścieżek obejmujacą wczytanie danych z repozytorium i ich walidacje oraz drugą charakterystyczną dla poszczególnych ścieżek polegającą na przygotowaniu danych.
+Omówienie parametrów dla tego procesu zostanie podzielone na dwie części, pierwszą wspólną dla wszystkich ścieżek obejmujacą wczytanie danych z repozytorium i~ich walidacje oraz drugą charakterystyczną dla poszczególnych ścieżek polegającą na przygotowaniu danych.
 
 Pierwszym wspólnym elementem dla wszystkich ścieżek jest wczytanie danych, którego jedyną ustawioną opcją jest ścieżka do danych w lokalnym repozytorium programu Rapid Miner.
 
-Kolejnymi elementami wspólnymi dla wszystkich ścieżek jest złożony operator pętli. W operatorze tym ustawiono liczbę iteracji na 20. Natomiast wewnatrz tego operatora znajduje się operator walidacji krzyżowej z wartością wykonań ustawioną na 10. Podział próbek wykonywany jest automatycznie.
+Kolejnymi elementami wspólnymi dla wszystkich ścieżek jest złożony operator pętli. W operatorze tym ustawiono liczbę iteracji na 20. Natomiast wewnątrz tego operatora znajduje się operator walidacji krzyżowej z wartością wykonań ustawioną na 10. Podział próbek wykonywany jest automatycznie.
 
 W sekcji treningowej umieszczono model drzewa decyzyjnego z kryterium ustawionym na "gain\_ratio" z maksymalną głębokoscią ustawioną na 10. "Confidence" ustawiono na 0.1, "minimal gain" na 0.01, a minimalnawielkosć liścia na 2.
 
-W sekcji testowej, umieszczono operator apply model otrzymujący wytrenowany model oraz dane testowe. Pondato umieszczono tutaj również operator "Prefromance" obliczajacy skuteczność modelu.
+W sekcji testowej, umieszczono operator "Apply Model" otrzymujący wytrenowany model oraz dane testowe. Ponadto umieszczono tutaj również operator "Performance" obliczający skuteczność modelu.
 
-Za pętlą umieszczono jeszcze dwa operatory, pierwszy "multiply" powiela wyniki z pętli, jedne trafiają bezposrednio na wyjście. Drugie zaś trafiają do operatora "Average", który oblicza średnią dokładność z otrzymanych 20 iteracji pętli.
+Za pętlą umieszczono jeszcze dwa operatory, pierwszy "Multiply" powiela wyniki z~pętli, jedne trafiają bezposrednio na wyjście. Drugie zaś trafiają do operatora "Average", który oblicza średnią dokładność z otrzymanych 20 iteracji pętli.
 
 Pierwsza ścieżka stanowi punkt odniesienia dla pozostałych i nie zawiera operatorów przygotowywujących dane.
 
@@ -222,7 +227,7 @@ Druga ścieżka do przygotowania danych używa operatora "Replace Missing Values
 
 Trzecia ścieżka używa również operatora "Replace Missing Values" na wszystkich atrybutach, ale zamiast sredniej zastępuje je zerami. Ponadto używa dyskretyzacji z parametrami "attribute filter type" ustawionym na "all" oraz "number of bins" ustawionym na 2.
 
-Czwarta ścieżka również używa operatora "replace Missing Values" dla wszystkich atrybutów, ale używa wartości maksymalnej do zastąpienia brakujacych wartości.
+Czwarta ścieżka również używa operatora "Replace Missing Values" dla wszystkich atrybutów, ale używa wartości maksymalnej do zastąpienia brakujacych wartości.
 Pondato przeprowadzona ona dyskretyzacje na kolumnie "S1\_Light" ("attribute filter type" z wartoscią "single" oraz "attribute" z wartością "S1\_Light") z domyślną wartością atrybutu "number of bins".
 
 Piąta ścieżka podobnie jak poprzednie używa operatora "Replace Missing Values" to zastąpienia brakujących wartości, ale zastępuje je wartościami minimalnymi. Podobnie jak w ścieżce czwartej następuje dyskretyzacja na pojedynczej kolumnie, z tą różnicą że jest to kolumna "S5\_CO2".
