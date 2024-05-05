@@ -62,7 +62,7 @@ percentage_increase_random_lb <- (
   (random_lb_waiting_time - original_waiting_time) / original_waiting_time
 ) * 100
 
-plot(L_values, mean_waiting_time, type="l", col="red",
+plot(L_values, original_waiting_time, type="l", col="red",
       xlab="L (average requests per millisecond)", 
       ylab="mean waiting time [seconds]")
 
