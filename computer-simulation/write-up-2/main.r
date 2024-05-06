@@ -7,7 +7,7 @@ M1 <- 2 # Średni czas przetwarzania zapytań DNS
 SD1 <- 2 #Odchylenie standardowe czasu przetwarzania zapytań DNS
 M2 <- 4 # Średni czas przetwarzania zapytań HTML
 SD2 <- 2 #Odchylenie standardowe czasu przetwarzania zapytań HTML
-L_values <- seq(0.001, 0.01, 0.001)
+L_values <- seq(0.1, 1, 0.05)
 
 run_simulation <- function(num_dns_html, num_html, lb_policy) {
 
@@ -24,12 +24,12 @@ run_simulation <- function(num_dns_html, num_html, lb_policy) {
     release_selected()
 
   envs <- mclapply(L_values, function(L) {
-    q <- L * 1000
+    q <- L 
     simmer("servers") %>%
       add_resource("dns_html", num_dns_html) %>%
       add_resource("html", num_html) %>%
-      add_generator("dns", dns, function() rexp(1, q / 2)) %>%
-      add_generator("html", html, function() rexp(1, q / 2)) %>%
+      add_generator("dns", dns, function() rexp(1, q)) %>%
+      add_generator("html", html, function() rexp(1, q)) %>%
       run(10000) %>%
       wrap()
   })
