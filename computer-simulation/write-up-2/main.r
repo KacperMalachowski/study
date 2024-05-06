@@ -3,9 +3,9 @@ library(parallel)
 
 set.seed(42)
 
-M1 <- 2 # Średni czas przetwarzania zapytań DNS
+M1 <- 10 # Średni czas przetwarzania zapytań DNS
 SD1 <- 2 #Odchylenie standardowe czasu przetwarzania zapytań DNS
-M2 <- 4 # Średni czas przetwarzania zapytań HTML
+M2 <- 20 # Średni czas przetwarzania zapytań HTML
 SD2 <- 2 #Odchylenie standardowe czasu przetwarzania zapytań HTML
 L_values <- seq(0.1, 1, 0.05)
 
