@@ -7,7 +7,7 @@ M1 <- 10 # Średni czas przetwarzania zapytań DNS
 SD1 <- 2 #Odchylenie standardowe czasu przetwarzania zapytań DNS
 M2 <- 20 # Średni czas przetwarzania zapytań HTML
 SD2 <- 2 #Odchylenie standardowe czasu przetwarzania zapytań HTML
-L_values <- seq(0.01, 0.5, 0.01)
+L_values <- seq(0.1, 0.5, 0.01)
 
 run_simulation <- function(num_dns_html, num_html, lb_policy) {
 
