@@ -189,8 +189,8 @@ Ponadto zgodnie z założeniami połowa zapytań to zapytania DNS, druga połowa
     simmer("servers") %>%
       add_resource("dns_html", 3) %>%
       add_resource("html", 2) %>%
-      add_generator("dns", dns, function() rexp(1, q)) %>%
-      add_generator("html", html, function() rexp(1, q)) %>%
+      add_generator("dns", dns, function() rexp(1, q) * 2) %>%
+      add_generator("html", html, function() rexp(1, q) * 2) %>%
       run(10000) %>%
       wrap()
   }, mc.cores = parallel::detectCores())
@@ -223,7 +223,7 @@ Ponadto, nawet jeśli sam load balancer nie przetwarza zapytań ich przekierowan
 
 \chapter*{Zadanie 2}
 
-O ile procent wzrośnieśredniczas oczekiwania na przetworzenie zapytaniagdy awarii ulegnie:
+O ile procent wzrośnie średni czas oczekiwania na przetworzenie zapytania gdy awarii ulegnie:
 \begin{itemize}
   \item Jeden serwer HTML?
   \item Dwa serwery HMTL+DNS?
@@ -265,8 +265,8 @@ Sama symulacja realizowana jest w sposób analogiczny do kodu z zadania nr 1.
       simmer("servers") %>%
         add_resource("dns_html", num_dns_html) %>%
         add_resource("html", num_html) %>%
-        add_generator("dns", dns, function() rexp(1, q)) %>%
-        add_generator("html", html, function() rexp(1, q)) %>%
+        add_generator("dns", dns, function() rexp(1, q) * 2) %>%
+        add_generator("html", html, function() rexp(1, q) * 2) %>%
         run(10000) %>%
         wrap()
     }, mc.cores = parallel::detectCores())
@@ -276,7 +276,9 @@ Sama symulacja realizowana jest w sposób analogiczny do kodu z zadania nr 1.
   
     mean_waiting_time <- c()
     for (i in 1:max(results$replication)){
-      mean_waiting_time[i] <- mean(results$waiting_time[results$replication == i])
+      mean_waiting_time[i] <- mean(
+        results$waiting_time[results$replication == i]
+      )
     }
   
     return(mean_waiting_time)
@@ -285,24 +287,36 @@ Sama symulacja realizowana jest w sposób analogiczny do kodu z zadania nr 1.
   original_waiting_time_vector <- run_simulation(3, 2, "shortest-queue")
   original_waiting_time <- mean(original_waiting_time_vector)
   
-  one_html_failed_waiting_time <- mean(run_simulation(3, 1, "shortest-queue"))
-  two_dns_html_failed_waiting_time <- mean(run_simulation(1, 2, "shortest-queue"))
+  one_html_failed_waiting_time <- mean(
+    run_simulation(3, 1, "shortest-queue")
+    )
+  two_dns_html_failed_waiting_time <- mean(
+    run_simulation(1, 2, "shortest-queue")
+    )
   random_lb_waiting_time <- mean(run_simulation(3, 2, "random"))
   
-  percentage_increase_one_html_failed <- ((one_html_failed_waiting_time - original_waiting_time) / original_waiting_time) * 100
+  percentage_increase_one_html_failed <- (
+    (
+      one_html_failed_waiting_time - original_waiting_time
+    ) / original_waiting_time
+  ) * 100
   
   percentage_increase_two_dns_html_failed <- (
-    (two_dns_html_failed_waiting_time - original_waiting_time) / original_waiting_time
+    (
+      two_dns_html_failed_waiting_time - original_waiting_time
+    ) / original_waiting_time
   ) * 100
+  
   percentage_increase_random_lb <- (
     (random_lb_waiting_time - original_waiting_time) / original_waiting_time
   ) * 100
   
-  cat("Percentage increase in waiting time with one HTML server failure:", 
+  cat("Percentage increase with one HTML server failure:", 
       percentage_increase_one_html_failed, "%\n")
-  cat("Percentage increase in waiting time with two DNS+HTML server failures:", 
+  cat("Percentage increase with two DNS+HTML server failures:", 
       percentage_increase_two_dns_html_failed, "%\n")
-  cat("Percentage increase in waiting time with random load balancer:", percentage_increase_random_lb, "%\n")
+  cat("Percentage increase with random load balancer:",
+   percentage_increase_random_lb, "%\n")
   
   plot(L_values, original_waiting_time_vector, type="l", col="red",
         xlab="L (average requests per millisecond)", 
@@ -316,9 +330,9 @@ Główna różnica polega na dodaniu obliczeń związanych z obliczaniem wartoś
 
 Dla przedstawionych sceneriuszy procentowy wzrost średniego czasu oczekiwania dla zapytań wynosi:
 \begin{itemize}
-  \item Awaria pojedynczego serwera HTML: 15.78671\%
-  \item Awaria dwóch serwerów DNS+HTML: 75.96218\%
-  \item Awaria load balancera: 12.41789\%
+  \item Awaria pojedynczego serwera HTML: 86.32795\%
+  \item Awaria dwóch serwerów DNS+HTML: 311.8372\%
+  \item Awaria load balancera: 28.23808\%
 \end{itemize}
 
 \section*{Wnioski}
