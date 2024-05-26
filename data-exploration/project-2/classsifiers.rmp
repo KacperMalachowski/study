@@ -13,46 +13,9 @@
     <parameter key="encoding" value="SYSTEM"/>
     <process expanded="true">
       <operator activated="true" class="retrieve" compatibility="10.3.001" expanded="true" height="68" name="Retrieve" width="90" x="112" y="34">
-        <parameter key="repository_entry" value="//Local Repository/data/data"/>
+        <parameter key="repository_entry" value="//Local Repository/data/sciezka_best_data"/>
       </operator>
-      <operator activated="true" class="replace_missing_values" compatibility="10.3.001" expanded="true" height="103" name="Replace Missing Values (4)" width="90" x="246" y="34">
-        <parameter key="return_preprocessing_model" value="false"/>
-        <parameter key="attribute_filter_type" value="all"/>
-        <parameter key="attribute" value="S5_CO2_Slope"/>
-        <parameter key="attributes" value=""/>
-        <parameter key="use_except_expression" value="false"/>
-        <parameter key="value_type" value="attribute_value"/>
-        <parameter key="use_value_type_exception" value="false"/>
-        <parameter key="except_value_type" value="time"/>
-        <parameter key="block_type" value="attribute_block"/>
-        <parameter key="use_block_type_exception" value="false"/>
-        <parameter key="except_block_type" value="value_matrix_row_start"/>
-        <parameter key="invert_selection" value="false"/>
-        <parameter key="include_special_attributes" value="false"/>
-        <parameter key="default" value="minimum"/>
-        <list key="columns"/>
-      </operator>
-      <operator activated="true" class="discretize_by_frequency" compatibility="10.3.001" expanded="true" height="103" name="Discretize (3)" width="90" x="380" y="34">
-        <parameter key="return_preprocessing_model" value="false"/>
-        <parameter key="attribute_filter_type" value="single"/>
-        <parameter key="attribute" value="S5_CO2"/>
-        <parameter key="attributes" value=""/>
-        <parameter key="use_except_expression" value="false"/>
-        <parameter key="value_type" value="numeric"/>
-        <parameter key="use_value_type_exception" value="false"/>
-        <parameter key="except_value_type" value="real"/>
-        <parameter key="block_type" value="value_series"/>
-        <parameter key="use_block_type_exception" value="false"/>
-        <parameter key="except_block_type" value="value_series_end"/>
-        <parameter key="invert_selection" value="false"/>
-        <parameter key="include_special_attributes" value="false"/>
-        <parameter key="use_sqrt_of_examples" value="false"/>
-        <parameter key="number_of_bins" value="2"/>
-        <parameter key="range_name_type" value="long"/>
-        <parameter key="automatic_number_of_digits" value="true"/>
-        <parameter key="number_of_digits" value="-1"/>
-      </operator>
-      <operator activated="true" class="concurrency:loop" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Loop" width="90" x="581" y="34">
+      <operator activated="true" class="concurrency:loop" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Loop" width="90" x="313" y="34">
         <parameter key="number_of_iterations" value="20"/>
         <parameter key="iteration_macro" value="iteration"/>
         <parameter key="reuse_results" value="false"/>
@@ -67,7 +30,7 @@
             <parameter key="local_random_seed" value="1992"/>
             <parameter key="enable_parallel_execution" value="true"/>
             <process expanded="true">
-              <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="10.3.001" expanded="true" height="103" name="Decision Tree (5)" width="90" x="313" y="34">
+              <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="10.3.001" expanded="true" height="103" name="Decision Tree (5)" width="90" x="179" y="34">
                 <parameter key="criterion" value="gain_ratio"/>
                 <parameter key="maximal_depth" value="10"/>
                 <parameter key="apply_pruning" value="true"/>
@@ -111,49 +74,12 @@
           <portSpacing port="sink_output 2" spacing="0"/>
         </process>
       </operator>
-      <operator activated="true" class="multiply" compatibility="10.3.001" expanded="true" height="103" name="Sciezka_Multiply" width="90" x="782" y="34"/>
-      <operator activated="true" class="average" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Avg" width="90" x="983" y="85"/>
+      <operator activated="true" class="multiply" compatibility="10.3.001" expanded="true" height="103" name="Sciezka_Multiply" width="90" x="514" y="34"/>
+      <operator activated="true" class="average" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Avg" width="90" x="715" y="85"/>
       <operator activated="true" class="retrieve" compatibility="10.3.001" expanded="true" height="68" name="Retrieve (2)" width="90" x="112" y="187">
-        <parameter key="repository_entry" value="//Local Repository/data/data"/>
+        <parameter key="repository_entry" value="//Local Repository/data/sciezka_best_data"/>
       </operator>
-      <operator activated="true" class="replace_missing_values" compatibility="10.3.001" expanded="true" height="103" name="Replace Missing Values" width="90" x="246" y="187">
-        <parameter key="return_preprocessing_model" value="false"/>
-        <parameter key="attribute_filter_type" value="all"/>
-        <parameter key="attribute" value="S5_CO2_Slope"/>
-        <parameter key="attributes" value=""/>
-        <parameter key="use_except_expression" value="false"/>
-        <parameter key="value_type" value="attribute_value"/>
-        <parameter key="use_value_type_exception" value="false"/>
-        <parameter key="except_value_type" value="time"/>
-        <parameter key="block_type" value="attribute_block"/>
-        <parameter key="use_block_type_exception" value="false"/>
-        <parameter key="except_block_type" value="value_matrix_row_start"/>
-        <parameter key="invert_selection" value="false"/>
-        <parameter key="include_special_attributes" value="false"/>
-        <parameter key="default" value="minimum"/>
-        <list key="columns"/>
-      </operator>
-      <operator activated="true" class="discretize_by_frequency" compatibility="10.3.001" expanded="true" height="103" name="Discretize" width="90" x="380" y="187">
-        <parameter key="return_preprocessing_model" value="false"/>
-        <parameter key="attribute_filter_type" value="single"/>
-        <parameter key="attribute" value="S5_CO2"/>
-        <parameter key="attributes" value=""/>
-        <parameter key="use_except_expression" value="false"/>
-        <parameter key="value_type" value="numeric"/>
-        <parameter key="use_value_type_exception" value="false"/>
-        <parameter key="except_value_type" value="real"/>
-        <parameter key="block_type" value="value_series"/>
-        <parameter key="use_block_type_exception" value="false"/>
-        <parameter key="except_block_type" value="value_series_end"/>
-        <parameter key="invert_selection" value="false"/>
-        <parameter key="include_special_attributes" value="false"/>
-        <parameter key="use_sqrt_of_examples" value="false"/>
-        <parameter key="number_of_bins" value="2"/>
-        <parameter key="range_name_type" value="long"/>
-        <parameter key="automatic_number_of_digits" value="true"/>
-        <parameter key="number_of_digits" value="-1"/>
-      </operator>
-      <operator activated="true" class="concurrency:loop" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Loop (2)" width="90" x="581" y="187">
+      <operator activated="true" class="concurrency:loop" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Loop (2)" width="90" x="313" y="187">
         <parameter key="number_of_iterations" value="20"/>
         <parameter key="iteration_macro" value="iteration"/>
         <parameter key="reuse_results" value="false"/>
@@ -168,7 +94,7 @@
             <parameter key="local_random_seed" value="1992"/>
             <parameter key="enable_parallel_execution" value="true"/>
             <process expanded="true">
-              <operator activated="true" class="k_nn" compatibility="10.3.001" expanded="true" height="82" name="k-NN" width="90" x="514" y="34">
+              <operator activated="true" class="k_nn" compatibility="10.3.001" expanded="true" height="82" name="k-NN" width="90" x="179" y="34">
                 <parameter key="k" value="5"/>
                 <parameter key="weighted_vote" value="true"/>
                 <parameter key="measure_types" value="MixedMeasures"/>
@@ -196,7 +122,7 @@
               <operator activated="true" class="apply_model" compatibility="10.3.001" expanded="true" height="82" name="Apply Model" width="90" x="246" y="34">
                 <list key="application_parameters"/>
               </operator>
-              <operator activated="true" class="performance" compatibility="10.3.001" expanded="true" height="82" name="Performance" width="90" x="514" y="34">
+              <operator activated="true" class="performance" compatibility="10.3.001" expanded="true" height="82" name="Performance" width="90" x="447" y="34">
                 <parameter key="use_example_weights" value="true"/>
               </operator>
               <connect from_port="model" to_op="Apply Model" to_port="model"/>
@@ -219,49 +145,12 @@
           <portSpacing port="sink_output 2" spacing="0"/>
         </process>
       </operator>
-      <operator activated="true" class="multiply" compatibility="10.3.001" expanded="true" height="103" name="Sciezka_Multiply (2)" width="90" x="782" y="187"/>
-      <operator activated="true" class="average" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Avg (2)" width="90" x="983" y="238"/>
+      <operator activated="true" class="multiply" compatibility="10.3.001" expanded="true" height="103" name="Sciezka_Multiply (2)" width="90" x="514" y="187"/>
+      <operator activated="true" class="average" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Avg (2)" width="90" x="715" y="238"/>
       <operator activated="true" class="retrieve" compatibility="10.3.001" expanded="true" height="68" name="Retrieve (3)" width="90" x="112" y="340">
-        <parameter key="repository_entry" value="//Local Repository/data/data"/>
+        <parameter key="repository_entry" value="//Local Repository/data/sciezka_best_data"/>
       </operator>
-      <operator activated="true" class="replace_missing_values" compatibility="10.3.001" expanded="true" height="103" name="Replace Missing Values (5)" width="90" x="246" y="340">
-        <parameter key="return_preprocessing_model" value="false"/>
-        <parameter key="attribute_filter_type" value="all"/>
-        <parameter key="attribute" value="S5_CO2_Slope"/>
-        <parameter key="attributes" value=""/>
-        <parameter key="use_except_expression" value="false"/>
-        <parameter key="value_type" value="attribute_value"/>
-        <parameter key="use_value_type_exception" value="false"/>
-        <parameter key="except_value_type" value="time"/>
-        <parameter key="block_type" value="attribute_block"/>
-        <parameter key="use_block_type_exception" value="false"/>
-        <parameter key="except_block_type" value="value_matrix_row_start"/>
-        <parameter key="invert_selection" value="false"/>
-        <parameter key="include_special_attributes" value="false"/>
-        <parameter key="default" value="minimum"/>
-        <list key="columns"/>
-      </operator>
-      <operator activated="true" class="discretize_by_frequency" compatibility="10.3.001" expanded="true" height="103" name="Discretize (4)" width="90" x="380" y="340">
-        <parameter key="return_preprocessing_model" value="false"/>
-        <parameter key="attribute_filter_type" value="single"/>
-        <parameter key="attribute" value="S5_CO2"/>
-        <parameter key="attributes" value=""/>
-        <parameter key="use_except_expression" value="false"/>
-        <parameter key="value_type" value="numeric"/>
-        <parameter key="use_value_type_exception" value="false"/>
-        <parameter key="except_value_type" value="real"/>
-        <parameter key="block_type" value="value_series"/>
-        <parameter key="use_block_type_exception" value="false"/>
-        <parameter key="except_block_type" value="value_series_end"/>
-        <parameter key="invert_selection" value="false"/>
-        <parameter key="include_special_attributes" value="false"/>
-        <parameter key="use_sqrt_of_examples" value="false"/>
-        <parameter key="number_of_bins" value="2"/>
-        <parameter key="range_name_type" value="long"/>
-        <parameter key="automatic_number_of_digits" value="true"/>
-        <parameter key="number_of_digits" value="-1"/>
-      </operator>
-      <operator activated="true" class="concurrency:loop" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Loop (3)" width="90" x="581" y="340">
+      <operator activated="true" class="concurrency:loop" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Loop (3)" width="90" x="313" y="340">
         <parameter key="number_of_iterations" value="20"/>
         <parameter key="iteration_macro" value="iteration"/>
         <parameter key="reuse_results" value="false"/>
@@ -312,49 +201,12 @@
           <portSpacing port="sink_output 2" spacing="0"/>
         </process>
       </operator>
-      <operator activated="true" class="multiply" compatibility="10.3.001" expanded="true" height="103" name="Sciezka_Multiply (3)" width="90" x="782" y="340"/>
-      <operator activated="true" class="average" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Avg (3)" width="90" x="983" y="391"/>
+      <operator activated="true" class="multiply" compatibility="10.3.001" expanded="true" height="103" name="Sciezka_Multiply (3)" width="90" x="514" y="340"/>
+      <operator activated="true" class="average" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Avg (3)" width="90" x="715" y="391"/>
       <operator activated="true" class="retrieve" compatibility="10.3.001" expanded="true" height="68" name="Retrieve (4)" width="90" x="112" y="493">
-        <parameter key="repository_entry" value="//Local Repository/data/data"/>
+        <parameter key="repository_entry" value="//Local Repository/data/sciezka_best_data"/>
       </operator>
-      <operator activated="true" class="replace_missing_values" compatibility="10.3.001" expanded="true" height="103" name="Replace Missing Values (6)" width="90" x="246" y="493">
-        <parameter key="return_preprocessing_model" value="false"/>
-        <parameter key="attribute_filter_type" value="all"/>
-        <parameter key="attribute" value="S5_CO2_Slope"/>
-        <parameter key="attributes" value=""/>
-        <parameter key="use_except_expression" value="false"/>
-        <parameter key="value_type" value="attribute_value"/>
-        <parameter key="use_value_type_exception" value="false"/>
-        <parameter key="except_value_type" value="time"/>
-        <parameter key="block_type" value="attribute_block"/>
-        <parameter key="use_block_type_exception" value="false"/>
-        <parameter key="except_block_type" value="value_matrix_row_start"/>
-        <parameter key="invert_selection" value="false"/>
-        <parameter key="include_special_attributes" value="false"/>
-        <parameter key="default" value="minimum"/>
-        <list key="columns"/>
-      </operator>
-      <operator activated="true" class="discretize_by_frequency" compatibility="10.3.001" expanded="true" height="103" name="Discretize (5)" width="90" x="380" y="493">
-        <parameter key="return_preprocessing_model" value="false"/>
-        <parameter key="attribute_filter_type" value="single"/>
-        <parameter key="attribute" value="S5_CO2"/>
-        <parameter key="attributes" value=""/>
-        <parameter key="use_except_expression" value="false"/>
-        <parameter key="value_type" value="numeric"/>
-        <parameter key="use_value_type_exception" value="false"/>
-        <parameter key="except_value_type" value="real"/>
-        <parameter key="block_type" value="value_series"/>
-        <parameter key="use_block_type_exception" value="false"/>
-        <parameter key="except_block_type" value="value_series_end"/>
-        <parameter key="invert_selection" value="false"/>
-        <parameter key="include_special_attributes" value="false"/>
-        <parameter key="use_sqrt_of_examples" value="false"/>
-        <parameter key="number_of_bins" value="2"/>
-        <parameter key="range_name_type" value="long"/>
-        <parameter key="automatic_number_of_digits" value="true"/>
-        <parameter key="number_of_digits" value="-1"/>
-      </operator>
-      <operator activated="true" class="concurrency:loop" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Loop (4)" width="90" x="581" y="493">
+      <operator activated="true" class="concurrency:loop" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Loop (4)" width="90" x="313" y="493">
         <parameter key="number_of_iterations" value="20"/>
         <parameter key="iteration_macro" value="iteration"/>
         <parameter key="reuse_results" value="false"/>
@@ -369,7 +221,7 @@
             <parameter key="local_random_seed" value="1992"/>
             <parameter key="enable_parallel_execution" value="true"/>
             <process expanded="true">
-              <operator activated="true" class="vote" compatibility="10.3.001" expanded="true" height="68" name="Vote" width="90" x="514" y="34">
+              <operator activated="true" class="vote" compatibility="10.3.001" expanded="true" height="68" name="Vote" width="90" x="179" y="34">
                 <process expanded="true">
                   <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="10.3.001" expanded="true" height="103" name="Decision Tree" width="90" x="581" y="34">
                     <parameter key="criterion" value="gain_ratio"/>
@@ -452,32 +304,24 @@
           <portSpacing port="sink_output 2" spacing="0"/>
         </process>
       </operator>
-      <operator activated="true" class="multiply" compatibility="10.3.001" expanded="true" height="103" name="Sciezka_Multiply (4)" width="90" x="782" y="493"/>
-      <operator activated="true" class="average" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Avg (4)" width="90" x="983" y="544"/>
-      <connect from_op="Retrieve" from_port="output" to_op="Replace Missing Values (4)" to_port="example set input"/>
-      <connect from_op="Replace Missing Values (4)" from_port="example set output" to_op="Discretize (3)" to_port="example set input"/>
-      <connect from_op="Discretize (3)" from_port="example set output" to_op="Sciezka_Loop" to_port="input 1"/>
+      <operator activated="true" class="multiply" compatibility="10.3.001" expanded="true" height="103" name="Sciezka_Multiply (4)" width="90" x="514" y="493"/>
+      <operator activated="true" class="average" compatibility="10.3.001" expanded="true" height="82" name="Sciezka_Avg (4)" width="90" x="715" y="544"/>
+      <connect from_op="Retrieve" from_port="output" to_op="Sciezka_Loop" to_port="input 1"/>
       <connect from_op="Sciezka_Loop" from_port="output 1" to_op="Sciezka_Multiply" to_port="input"/>
       <connect from_op="Sciezka_Multiply" from_port="output 1" to_port="result 1"/>
       <connect from_op="Sciezka_Multiply" from_port="output 2" to_op="Sciezka_Avg" to_port="averagable 1"/>
       <connect from_op="Sciezka_Avg" from_port="average" to_port="result 2"/>
-      <connect from_op="Retrieve (2)" from_port="output" to_op="Replace Missing Values" to_port="example set input"/>
-      <connect from_op="Replace Missing Values" from_port="example set output" to_op="Discretize" to_port="example set input"/>
-      <connect from_op="Discretize" from_port="example set output" to_op="Sciezka_Loop (2)" to_port="input 1"/>
+      <connect from_op="Retrieve (2)" from_port="output" to_op="Sciezka_Loop (2)" to_port="input 1"/>
       <connect from_op="Sciezka_Loop (2)" from_port="output 1" to_op="Sciezka_Multiply (2)" to_port="input"/>
       <connect from_op="Sciezka_Multiply (2)" from_port="output 1" to_port="result 3"/>
       <connect from_op="Sciezka_Multiply (2)" from_port="output 2" to_op="Sciezka_Avg (2)" to_port="averagable 1"/>
       <connect from_op="Sciezka_Avg (2)" from_port="average" to_port="result 4"/>
-      <connect from_op="Retrieve (3)" from_port="output" to_op="Replace Missing Values (5)" to_port="example set input"/>
-      <connect from_op="Replace Missing Values (5)" from_port="example set output" to_op="Discretize (4)" to_port="example set input"/>
-      <connect from_op="Discretize (4)" from_port="example set output" to_op="Sciezka_Loop (3)" to_port="input 1"/>
+      <connect from_op="Retrieve (3)" from_port="output" to_op="Sciezka_Loop (3)" to_port="input 1"/>
       <connect from_op="Sciezka_Loop (3)" from_port="output 1" to_op="Sciezka_Multiply (3)" to_port="input"/>
       <connect from_op="Sciezka_Multiply (3)" from_port="output 1" to_port="result 5"/>
       <connect from_op="Sciezka_Multiply (3)" from_port="output 2" to_op="Sciezka_Avg (3)" to_port="averagable 1"/>
       <connect from_op="Sciezka_Avg (3)" from_port="average" to_port="result 6"/>
-      <connect from_op="Retrieve (4)" from_port="output" to_op="Replace Missing Values (6)" to_port="example set input"/>
-      <connect from_op="Replace Missing Values (6)" from_port="example set output" to_op="Discretize (5)" to_port="example set input"/>
-      <connect from_op="Discretize (5)" from_port="example set output" to_op="Sciezka_Loop (4)" to_port="input 1"/>
+      <connect from_op="Retrieve (4)" from_port="output" to_op="Sciezka_Loop (4)" to_port="input 1"/>
       <connect from_op="Sciezka_Loop (4)" from_port="output 1" to_op="Sciezka_Multiply (4)" to_port="input"/>
       <connect from_op="Sciezka_Multiply (4)" from_port="output 1" to_port="result 7"/>
       <connect from_op="Sciezka_Multiply (4)" from_port="output 2" to_op="Sciezka_Avg (4)" to_port="averagable 1"/>
