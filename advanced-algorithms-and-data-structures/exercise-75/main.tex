@@ -1,0 +1,194 @@
+%----------------------- Wydruk dwustronny ---------------
+%\documentclass[12pt,twoside,a4paper]{book} % 
+%----------------------- Wydruk jednostronny ---------------
+\documentclass[12pt,oneside,a4paper]{book} % jednostronnego
+
+\usepackage{polski}
+\usepackage[utf8]{inputenc} %opcja dla edytorów kodujących polskie znaki w utf8
+%\usepackage[cp1250]{inputenc} %opcja dla edytorów kodujących polskie znaki w windows-1250
+\usepackage{lmodern}
+\usepackage{indentfirst}
+\usepackage[protrusion=false]{microtype}
+\DisableLigatures{encoding = *, family = * }
+\usepackage{fancyhdr}
+\usepackage{pstricks,graphicx}
+\usepackage{amssymb}
+\usepackage{float}
+
+\usepackage{pdflscape}
+\usepackage{diagbox}
+
+%---------------Zbiory liczbowe
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\p}{\mathcal{P}}
+%------------kwantyfikatory--------------
+\newcommand{\fal}{\mbox{{\Large $\forall\,$}}}
+\newcommand{\ext}{\mbox{{\Large $\exists\,$}}}
+%------------------definicje środowisk-----------------
+\usepackage{theorem}
+\theoremstyle{break}
+\theorembodyfont{\it}
+\newtheorem{twr}{Twierdzenie}[chapter]
+\newtheorem{lem}{Lemat}[chapter]
+\theorembodyfont{\rm}
+\newtheorem{defi}{Definicja}[chapter]
+\newtheorem{wni}{Wniosek}[chapter]
+\newtheorem{prz}{Przykład}[chapter]
+\newenvironment{dowod}{\par\vspace{0.1cm}\par{ \sc Dowód.}}{\hfill $\blacksquare$\par\vspace{0.4cm}\par}
+% ----------ustawienia wymiarow strony
+\usepackage{geometry}
+
+\newgeometry{tmargin=2.5cm, bmargin=2.5cm, headheight=14.5pt, inner=3cm, outer=2.5cm} 
+
+\linespread{1.1} %-zmiana interlinii
+
+
+\fancypagestyle{mylandscape}{
+\fancyhf{} %Clears the header/footer
+\fancyfoot{% Footer
+\makebox[\textwidth][r]{% Right
+  \rlap{\hspace{.75cm}% Push out of margin by \footskip
+    \smash{% Remove vertical height
+      \raisebox{4.87in}{% Raise vertically
+        \rotatebox{90}{\thepage}}}}}}% Rotate counter-clockwise
+\renewcommand{\headrulewidth}{0pt}% No header rule
+\renewcommand{\footrulewidth}{0pt}% No footer rule
+}
+
+%---------------- Normalne środowiska --------------------
+\usepackage{amsmath}
+
+%----------nagłowki i żywa pagina ------------
+\pagestyle{fancy} 
+%--------------- Wydruk dwustronny
+%\cfoot[]{} 
+%\lhead[{\scriptsize{\it \thepage}}]{}
+%\chead[{\scriptsize\leftmark}]{{\scriptsize \rightmark}}
+%\rhead[]{{\scriptsize{\it \thepage}}}
+%--------------- Wydruk jednostronny
+\fancyhead[C]{} 
+\fancyfoot[C]{\thepage}
+\fancyhead[L]{\scriptsize\leftmark}
+\fancyhead[R]{\scriptsize\rightmark}
+
+\renewcommand{\chaptermark}[1]{%
+\markboth{\MakeUppercase{%
+\chaptername}\ \thechapter.%
+\ #1}{}}
+
+\usepackage[most]{tcolorbox}
+\let\includegraphicsold\includegraphics
+\newcommand{\includegraphicsborder}[2][]{\tcbox{\includegraphicsold[#1]{#2}}}
+
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+
+\usepackage[hidelinks]{hyperref}
+
+\usepackage{graphics}
+\graphicspath{ {images/} }
+
+\usepackage{listings}
+
+\renewcommand{\lstlistlistingname}{Spis listingów}
+\renewcommand{\lstlistingname}{Listing}
+
+\lstset{
+  basicstyle=\footnotesize,
+  numbers=left,
+  mathescape=true
+}
+
+\usepackage{booktabs}
+
+\newcommand\tabularhead[2]{
+  \begin{table}[ht]
+    \label{#2}
+    \caption{#1}
+    \begin{tabular}{|p{0.35\linewidth}|p{0.6\linewidth}|}
+    \hline
+    \textbf{#1}\\
+    \hline
+}
+\newcommand\addrow[2]{#1 &#2\\ \hline}
+
+\newcommand\addmulrow[2]{ \begin{minipage}[t][][t]{2.5cm}#1\end{minipage}
+   &\begin{minipage}[t][][t]{8cm}
+    \begin{enumerate} #2   \end{enumerate}
+    \end{minipage}\\ }
+
+\newenvironment{usecase}{\tabularhead}
+{\hline\end{tabular}\end{table}}
+
+
+
+%-----------------właściwa część pracy-----------------
+\begin{document}
+\thispagestyle{empty}
+\begin{center}
+  \Large
+  \bf{UNIWERSYTET ŚLĄSKI}\\
+  \bf{\sf{WYDZIAŁ NAUK ŚCISŁYCH I TECHNICZNYCH}}\\[25mm]
+  \large
+
+  \bf{Zadanie 75 - Rzuty monetą}\\[35mm]
+
+  Sprawozdanie\\
+  z przedmiotu\\
+  Zaawansowane algorytmy i struktury danych\\[25mm]
+\end{center}
+\begin{flushright}
+  \large
+  Autorzy:\\
+  Kacper Małachowski\\
+\end{flushright}
+\vspace*{\fill}
+\begin{center}
+  Informatyka II Stopnia\\
+  Lato 2023/2024\\
+  I rok, grupa 3\\[25mm]
+\end{center}
+
+\chapter*{Treść Zadania 75 - Rzuty Monetą}
+
+Załóżmy, że monetą rzucamy n razy. Przez ciąg powtórzeń rozumiemy kolejne po sobie rzuty, w których ta sama strona monety (za każdym razem orzeł lub za każdym razem reszka). Na przykład w OOORRORO (n = 8) występuje 5 ciągów powtórzeń.
+
+Jaka jest spodziewana liczba ciągów powtórzeń?
+
+\chapter*{Teoria}
+
+
+\chapter*{Rozwiązanie}
+
+Ponieważ pierwszy rzut rozpoczyna nowy ciąg powtórzeń to rozważmy rzuty od 2 do n. Jako $X_i$ oznaczmy zmienną, która przyjmuje wartość 1 jeśli rzut rozpoczyna nowy ciąg i 0 w przeciwnym wypadku.
+
+Spodziewana liczba powtórzeń zatem jest sumą wartości tej zmiennej dla poszczególnych rzutów, stąd:
+
+\begin{math}
+  \centering
+  E(liczbaCiagow) = 1 + \sum_{i=2}^{n}E(X_i)
+\end{math}
+
+Ponieważ kolejne rzuty są niezależne, prawdopodobieństwo rozpoczęcia nowego ciągu wynosi $\frac{1}{2}$ dla każdego rzutu. Stąd $E(X_i)=P(X_i=1)=\frac{1}{2}$. Teraz obliczmy sumę wszystkich $X_i$ od i = 2:
+
+\begin{math}
+  \centering
+  \sum_{i=2}^{n}E(X_i) = \sum_{i=2}^{n}\frac{1}{2} = (n-1)*\frac{1}{2} = \frac{n-1}{2}
+\end{math}
+
+Ponieważ pierwszy rzut zawsze rozpoczyna nowy ciąg to do tak uzyskanego wzoru dodajemy 1, stąd:
+
+\begin{math}
+  \centering
+  E(liczbaCiagow) = 1 + \frac{n-1}{2} = \frac{n+1}{2}
+\end{math}
+
+Zatem odpowiedź to: Spodziewana liczba ciagów powtórzeń wynosi $\frac{n+1}{2}$.
+
+\begin{thebibliography}{00}
+
+\end{thebibliography}
+
+\end{document}
