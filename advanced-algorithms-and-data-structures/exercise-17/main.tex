@@ -173,9 +173,33 @@ Błądzenie losowe (ang. \textit{Random Walk}) - jest procesem, w którym obiekt
 
 \chapter*{Rozwiązanie}
 
+Zadaniem jest dowieść, że oczekiwana liczba kroków dla tego algorytmu do jego zakończenia jest rzędu $O(n^2)$. Zauważyć należy najpierw, że mamy do czynienia z jednowymiarowym błądzeniem losowym. Co prawda w omawianym przypadku jest ono ograniczone ze lewej strony przez warunek, który uniemożliwia przejście na wartości ujemne, jednak dla potrzeb oszacowania ilości kroków nie ma to znaczenia z uwagi na losowość pozostałych kroków i naturę O-notacji, czyli oszacowania górnego.
+
+Zauważyć również należy, że tak skonstruowany warunek powoduje, że prawdopodobieństwo pójścia do przodu ($n_f$) i pójścia do tyłu ($n_b$) są takie same. Dzieje się tak ponieważ prawdopodobieństwo wylosowanie wartości większej lub równej $\frac{1}{2}$ jest równa prawdopodobieństwo wylosowania wartości mniejszej od tej wartości. Co można zapisać jako $P(n_f)=P(n_b)=\frac{1}{2}$.
+
+Z analizy algorytmu widzimy, że parametr n jest w rzeczywistości oczekiwanym dystansem, który algorytm ma pokonać zanim się zakończy.
+
+Spróbujmy zatem policzyć średni dystans, który pokona algorytm po N krokach. Wiemy, że dla każdego kroku poza pierwszym (ponieważ i = 1) jest równe dla każdego kroku, stąd $\overline{a_i}=0$ dla $i > 1$.
+
+\begin{math}
+  \centering
+  \overline{n}= \overline{a_1}+\overline{a_2}+\overline{a_3}+...+\overline{a_n}=1+0+0+...+0=1
+\end{math}
+
+Oznacza, to że średnio po N krokach algorytm przesunie się o jedną pozycje. To prowadzi do wniosku, że taki algorytm nie zakończy się nigdy dla $n > 1$, co przeczy teorii błądzenia losowego \cite{viriginaRandomWalk}.
+
+Spróbujmy zatem policzyć $\overline{n^2}$, ponieważ o ile średnia wartosć dla każdego kroku poza pierwszym wynosi 0, to średni kwadrat tej wartości wynosi 1. Stąd:
+
+\begin{math}
+  \centering
+  \overline{n^2} = \overline{(a_1 + a_2 + a_3 + ... + a_n)^2} = \overline{(a_1 + a_2 + a_3 + ... + a_n)(a_1 + a_2 + a_3 + ... + a_n)} = (\overline{a_1^2} + \overline{a_2^2} + ... + \overline{a_n^2}) + 2(\overline{a_1a_2} + \overline{a_1a_3} + ... + \overline{a_{n-1}a_n}) = (1 + 1 + 1 + ... + 1) + 2(0 + 0 + 0 + ... + 0) = N
+\end{math}
+
+Z tej równości możemy pokazać, że $\overline{n} = \sqrt{N}$, to zaś dowodzi że dla dowolnego dystansu n, potrzebujemy $N^2$ kroków by go osiągnąć w omawianym algorytmie i tym samym zakończyć ten algorytm. To zaś zgadza się z ogólną zasadą dla błądzenia losowego.
+
 \begin{thebibliography}{00}
-  \bibitem{MITRandomWalk}
-  Mehran Kardar, Andrea Schmidt. "Random Walks: The Mathematics in 1 Dimension", \url{https://www.mit.edu/~kardar/teaching/projects/chemotaxis(AndreaSchmidt)/random.htm}
+  \bibitem{viriginaRandomWalk}
+  Michael Fowler. "The One-Dimensional Random Walk". \url{https://galileo.phys.virginia.edu/classes/152.mf1i.spring02/RandomWalk.htm}
 \end{thebibliography}
 
 \end{document}
