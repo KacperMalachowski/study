@@ -159,13 +159,16 @@ Jaka jest spodziewana liczba ciągów powtórzeń?
 
 \chapter*{Teoria}
 
-Wartość spodziewana - spodziewany wynik doświadczenia losowego przy założonym prowdopodobieństwie jego wystąpienia \cite{MatKon}.
+Rozważmy proces rzutów monetą. Zakładamy, że rzucamy uczciwą monetą, dlatego za każdym razem prawdopodobieństwo wyrzucenia orła $P(O)$ jest równe prawdopodobieństwu wyrzuceniu reszki $P(R)$. Z uwagi na istnienie tylko dwóch możliwych wyników losowania, nie rozpatrujemy innego (np. pionowego) ułożenia monety, możemy określić prawdopodobieństwo obu przypadków $P(O)=P(R)=\frac{1}{2}$.
+Zdarzenia są niezależne gdy $P(A \cap B) = P(A)$ \cite{MetProb}.
 
-Ciąg powtórzeń - ciąg dowolnej długości powtarzajacych się po sobie elementów.
+Jako $X_i$ oznaczmy zmienną, która przyjmuje wartość 1 jeśli rzut rozpoczyna nowy ciąg i 0 w przeciwnym wypadku. Ponieważ pierwszy rzut rozpoczyna nowy ciąg powtórzeń, a więc $P(X_1=1)=1$ to rozważmy rzuty od 2 do n. 
+
+Ponieważ zmienna $X_i$ przyjmuje wartość 1 tylko gdy rozpoczynany jest nowy ciąg to wartośćią oczekiwaną ciagów powtórzeń będzie suma prawdopodobieństwa dla zmiennej $X_i$, która ma wartosć 1.
+
+
 
 \chapter*{Rozwiązanie}
-
-Ponieważ pierwszy rzut rozpoczyna nowy ciąg powtórzeń to rozważmy rzuty od 2 do n. Jako $X_i$ oznaczmy zmienną, która przyjmuje wartość 1 jeśli rzut rozpoczyna nowy ciąg i 0 w przeciwnym wypadku.
 
 Spodziewana liczba powtórzeń zatem jest sumą wartości tej zmiennej dla poszczególnych rzutów, stąd:
 
@@ -191,7 +194,7 @@ Ponieważ pierwszy rzut zawsze rozpoczyna nowy ciąg to do tak uzyskanego wzoru 
 Zatem odpowiedź to: Spodziewana liczba ciagów powtórzeń wynosi $\frac{n+1}{2}$.
 
 \begin{thebibliography}{00}
-  \bibitem{MatKon}
-  Graham Ronald L., Knuth Donald E., Oren Patashnik. "Matematyka konkretna", 2011
+  \bibitem{MetProb}
+  Kołtowski, W. (2020, November 4). Metody probabilistyczne: 4. Niezależność. Instytut Informatyki PP.\\ Retrieved from https://www.cs.put.poznan.pl/wkotlowski/mp/04\_niezaleznosc.pdf
 \end{thebibliography}
 \end{document}
