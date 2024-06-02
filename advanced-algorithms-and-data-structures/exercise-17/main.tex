@@ -169,41 +169,136 @@ Wykaż, że wartość oczekiwania liczby kroków tego algorytmu, po wykonaniu kt
 
 \chapter*{Teoria}
 
-Błądzenie losowe (ang. \textit{Random Walk}) - jest procesem, w którym obiekt wędruje w sposób losowy od miejsca startu \cite{viriginaRandomWalk}.
+Jedną z metod rozwiązania równania rekurencyjnego, co pozowoli nam wykazać, że wymagana liczba kroków jest rzędu $O(n^2)$ jest metoda równania charaktetystycznego.
 
-Algorytm - ciąg instrukcji wymaganych do rozwiązania konkretnego zadania.
+Jak pokazano w rozwiązaniu, mamy do czynienia z rekurencją niejednorodną, zatem rozwiązanie ma postać $a_n=a_n^h+a_n^p$, gdzie $a_n^h$ to rozwiązanie ogólne równania jednorodnego, natomiast $a_n^p$ to rozwiązanie szczegółowe równania niejednorodnego \cite{KwasnyRekurencja}.
 
-Prawdopodobieństwo - szansa na zaistnienie pewnego zdarzenia.
+Równanie charakterystyczne stosuje się do rekurencji w postaci:
+\begin{align*}
+  \begin{cases}
+    a_0,a_1\\
+    a_n=c_1a_{n-1}=c_0a_{n-2}
+  \end{cases}
+\end{align*}
+gdzie $c_1$ oraz $c_0$ są pewnymi stałymi, wtedy równanie to ma postać:
+\begin{align*}
+  x^2-c_1x-c_0=0
+\end{align*}
+co jest prostsze do rozwiązania \cite{BorowskaAlgorytmy}.
+
+Ponieważ równanie charakterystyczne jest w tym przypadku równaniem kwadratowym, należy obliczyć jego pierwiastki, stąd przypomnienie równania na deltę:
+\begin{align*}
+  \Delta=b^2-4ac
+\end{align*}
+
+i pierwiastki równania kwadratowe dla $\Delta > 0$:
+\begin{align*}
+  x_1=\frac{-b-\sqrt{\Delta}}{2a}\\
+  x_2=\frac{-b+\sqrt{\Delta}}{2a}
+\end{align*}
+oraz dla $\Delta=0$:
+\begin{align*}
+  x=\frac{-b}{2a}
+\end{align*}
+
 
 \chapter*{Rozwiązanie}
 
-Zadaniem jest dowieść, że oczekiwana liczba kroków dla tego algorytmu do jego zakończenia jest rzędu $O(n^2)$. Zauważyć należy najpierw, że mamy do czynienia z jednowymiarowym błądzeniem losowym. Co prawda w omawianym przypadku jest ono ograniczone ze lewej strony przez warunek, który uniemożliwia przejście na wartości ujemne, jednak dla potrzeb oszacowania ilości kroków nie ma to znaczenia z uwagi na losowość pozostałych kroków i naturę O-notacji, czyli oszacowania górnego.
+W celu rozwiązania podanego zadania, zauważyć należy, że mamy do czynienia w istocie z funkcją rekurencyjną. Co również ważne, zauważyć należe, że przez konstrukcje warunku w linii 5, prawdopodbieństwo pójścia do przodu $P(f)$ jest równe prawdopodbieństwu pójścia do tyłu $P(b)$. Można to zapisać jako $P(f)=P(b)=\frac{1}{2}$ dla $i > 1$.
 
-Zauważyć również należy, że tak skonstruowany warunek powoduje, że prawdopodobieństwo pójścia do przodu ($n_f$) i pójścia do tyłu ($n_b$) są takie same. Dzieje się tak ponieważ prawdopodobieństwo wylosowanie wartości większej lub równej $\frac{1}{2}$ jest równa prawdopodobieństwo wylosowania wartości mniejszej od tej wartości. Co można zapisać jako $P(n_f)=P(n_b)=\frac{1}{2}$.
+Ponadto mamy do czynienia z algorytmem rekurencyjnym z odbiciem w punkcie 1 oraz absorcją w definiowanym przez użytkownika punkcie n. W związku z tym prawdopodbieństwo przejścia do drugiego kroku dla $i=1$ wynosi 1.
 
-Z analizy algorytmu widzimy, że parametr n jest w rzeczywistości oczekiwanym dystansem, który algorytm ma pokonać zanim się zakończy.
+Możemy zatem określić warunki początkowe wraz z wzorem ogólnym rekurencji. Ponieważ jak wspomniano dla $E_n$ istnieje bariera absorbująca to wartość rekurencji jest równa 0.
+Natomiast z powodu odbicia na pozycji 1, otrzymano $E_1=1+E_2$. Stąd zapis rekurencji w postaci:
+\begin{align*}
+  \begin{cases}
+    E_n=0\\
+    E_1=1+E_2\\
+    E_i=1+\frac{1}{2}E_{i-1}+\frac{1}{2}E_{i+1}
+  \end{cases}
+\end{align*}
 
-Spróbujmy zatem policzyć średni dystans, który pokona algorytm po N krokach. Wiemy, że dla każdego kroku poza pierwszym (ponieważ i = 1) jest równe dla każdego kroku, stąd $\overline{a_i}=0$ dla $i > 1$.
+Zauważyć należy, że $E_i=1+\frac{1}{2}E_{i-1}+\frac{1}{2}E_{i+1}$ można uprościć do postaci $E_{i+1}=2E_i-E_{i-1}-2$.
 
-\begin{math}
-  \centering
-  \overline{n}= \overline{a_1}+\overline{a_2}+\overline{a_3}+...+\overline{a_n}=1+0+0+...+0=1
-\end{math}
+Zatem, mamy do czynienia z dwiema częściami, jednorodną w postaci $E_{i+1}=2E_i-E{i-1}$ oraz niejednorodną $-2$. Zatem wzór charaktetystyczny dla postaci jednorodnej ma postać: 
+\begin{align*}
+  x^2-2x+1=0
+\end{align*}
+rozwiązaniem takiego równania jest:
+\begin{align*}
+  \Delta=b^2-4ac=4-4*1*1=4-4=0
+\end{align*}
+zatem równanie ma tylko jedno rozwiązanie:
+\begin{align*}
+  x=\frac{-b}{2a}=\frac{2}{2*1}=1
+\end{align*}
+stąd, rozwiązanie ogólne:
+\begin{align*}
+  a_n^h=A*r^i+B*n*r^1=A*1^n+B*n*r^1=A+Bn
+\end{align*}
 
-Oznacza, to że średnio po N krokach algorytm przesunie się o jedną pozycje. To prowadzi do wniosku, że taki algorytm nie zakończy się nigdy dla $n > 1$, co przeczy teorii błądzenia losowego \cite{viriginaRandomWalk}.
+Znalezienie rozwiązania szczegółowego cześci niejednorodnej, wymaga opracowania wzoru nalepiej odzwieciedlającego rekurencje, w przypadku powyższego zadania będzie to $E_i^p=c+di=ei^2$. Podstawiając do $E_{i+1}=2E_i-E_{i-1}-2$, obliczamy.
 
-Spróbujmy zatem policzyć $\overline{n^2}$, ponieważ o ile średnia wartosć dla każdego kroku poza pierwszym wynosi 0, to średni kwadrat tej wartości wynosi 1. Stąd:
+\begin{align*}
+  E_i=c+di+ei^2
+\end{align*}
+\begin{align*}
+  E_{i-1}=c+d(i-1)+e(i-1)^2\\=c+d(i-1)+e(i^2-2i+1)\\=c+di-d+ei^2-2ei+e
+\end{align*}
+\begin{align*}
+  E_{i+1}=c+d(i+1)+e(i+1)^2\\=c+d(i+1)+e(i^2+2i+1)\\=c+di+d+ei^2+2ei+e
+\end{align*}
+podstawmy do $E_{i+1}=2E_i-E_{i-1}-2$, rozwiażmy e:
+\begin{align*}
+  c+di+d+ei^2+2ei+e=2(c+di+ei^2)-(c+di-d+ei^2-2ei+e)-2\\
+  c+di+d+ei^2+2ei+e=2c+2di+2ei^2-c-di+d-ei^2+2ei-e-2\\
+  ei^2-2ei^2+ei^2+2ei-2ei+e+e=2c-c-c+2di-di-di+d-d-2\\
+  2e=-2\\
+  e=-1
+\end{align*}
 
-\begin{math}
-  \centering
-  \overline{n^2} = \overline{(a_1 + a_2 + a_3 + ... + a_n)^2} = \overline{(a_1 + a_2 + a_3 + ... + a_n)(a_1 + a_2 + a_3 + ... + a_n)} = (\overline{a_1^2} + \overline{a_2^2} + ... + \overline{a_n^2}) + 2(\overline{a_1a_2} + \overline{a_1a_3} + ... + \overline{a_{n-1}a_n}) = (1 + 1 + 1 + ... + 1) + 2(0 + 0 + 0 + ... + 0) = N
-\end{math}
+Na podstawie powyższych obliczeń widzimy, że $e=-1, c=0, d=0$.
+Podstawiając do $E_i=c+di+ei^2$:
+\begin{align*}
+  E_i^p=0+0i-1i^2\\
+  E_i^p=-i^2
+\end{align*}
 
-Z tej równości możemy pokazać, że $\overline{n^2} = N$, to zaś dowodzi że dla dystansu $n$, potrzebujemy $N^2$ kroków by go osiągnąć w omawianym algorytmie i tym samym zakończyć ten algorytm. To zaś zgadza się z ogólną zasadą dla błądzenia losowego.
+Zatem korzystając ze wzoru $E_i=E_i^h+E_i^p$, otrzymujemy $E_i=A+Bi-i^2$.
+Obliczmy B, dla $E_n$. Korzystajac z $E_n=0$:
+\begin{align*}
+  0=A+Bi-i^2\\
+  i^2=A+Bn
+\end{align*}
+Korzystajac z $E-1=1+E_2$:
+\begin{align*}
+  A+B-1^2=1+A+2B-2^2\\
+  A+B-1=1+A+2B-4\\
+  B-2B=1+1-4+A-A\\
+  -B=-2\\
+  B=2
+\end{align*}
+Podstawmy do wzoru $A+Bn=n^2$:
+\begin{align*}
+  A-2n=n^2\\
+  A=n^2+2n
+\end{align*}
+
+Na koniec podstawiamy do $E_i=A+Bi-i^2$
+\begin{align*}
+  E_i=n^2+2n+2i-i^2
+\end{align*}
+
+Zatem spodziewana kroków wynosi $n^2+2n+2i-i^2$ co daje $O(n^2)$.
+To zaś dowodzi, że spodziewana liczba kroków jest rzędu $O(n^2)$
 
 \begin{thebibliography}{00}
-  \bibitem{viriginaRandomWalk}
-  Michael Fowler. "The One-Dimensional Random Walk". \url{https://galileo.phys.virginia.edu/classes/152.mf1i.spring02/RandomWalk.htm}
+  \bibitem{BorowskaAlgorytmy}
+  Borowska, A. (2020). Algorytmy i struktury danych - ćwiczenia. Część I. Analiza i techniki projektowania algorytmów. Wydawnictwo Naukowe PWN.
+  \bibitem{KwasnyRekurencja}
+  Kwasny, J. Rozwiązywanie zależności rekurencyjnych metodą
+  równania charakterystycznego. \url{https://home.agh.edu.pl/~jkwasny/WMD2018/rekurencja.pdf}\\
+  Dostęp: 02.06.2024
 \end{thebibliography}
 
 \end{document}
