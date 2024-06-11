@@ -1,0 +1,320 @@
+1) Które z poniższych stwierdzeń jest prawdziwe?  
+
+1. Użycie wielu pojedynczych obiektów pomaga poprawić jakość kodu.
+2. Możliwe jest tworzenie instancji obiektów singletonowych.
+3. Aby zadeklarować obiekty pojedyncze, użyj dowolnego obiektu typu object, singleton lub singleton.
+4. Obiekty singleton nie mają stanu.
+5. Obiekty singleton mogą mieć konstruktor.
+
+Odp: 2, 3 i 4
+
+2) Utwórz pojedynczy obiekt Constants z następującymi właściwościami: numberOf- Tabs = 5, windowTitle = "Astaria", prefsFile = "prefs.properties". Napisz kod, aby wydrukować wszystkie stałe do celów diagnostycznych. Wskazówka: do formatowania możesz użyć \ n wewnątrz ciągów znaków do podziału wiersza.
+
+Odp:
+object Constants {
+    val numberOfTabs = 5
+    val windowTitle = "Astaria"
+    val prefsFile = "prefs.properties"
+}
+
+fun main() {
+    println("numberOfTabs: ${Constants.numberOfTabs}")
+    println("windowTitle: ${Constants.windowTitle}")
+    println("prefsFile: ${Constants.prefsFile}")
+}
+
+
+3) Utwórz klasę Triangle. Dodawaj dowolnie parametry i właściwości konstruktora, ale także stwórz obiekt towarzyszący ze stałą NUMBER_OF_CORNERS = 3. Wewnątrz klasy utwórz funkcję info () wskazującą liczbę rogów.
+
+Odp:
+class Triangle(val side1: Double, val side2: Double, val side3: Double) {
+    companion object {
+        const val NUMBER_OF_CORNERS = 3
+    }
+
+    fun info() {
+        println("Triangle has $NUMBER_OF_CORNERS corners.")
+    }
+}
+
+4) Wewnątrz funkcji main () utwórz instancję klasy Triangle z Ex. 3, a następnie przypisz liczbę rzutów rożnych do jakiegoś val numberOfCorners.
+
+Odp:
+fun main() {
+    val triangle = Triangle(3.0, 4.0, 5.0)
+    val numberOfCorners = Triangle.NUMBER_OF_CORNERS
+    println("Number of corners: $numberOfCorners")
+}
+
+5) Cząstki elementarne mają co najmniej trzy wspólne cechy: masę, ładunek i spin. Utwórz interfejs ElementaryParticle z trzema odpowiadającymi funkcjami do pobrania: mass (): Double, charge (): Double i spin (): Double. Utwórz klasy Electron i Proton, które implementują interfejs. Elektron zwraca masę 9,11 · 10 -31, którą należy wprowadzić jako 9,11e-31, ładunek -1,0 i spin 0,5. Proton zwraca masę 1,67 · 10 -27, która ma być wprowadzona jako 1,67e-27, ładunek i spin 0,5.
+
+Odp:
+interface ElementaryParticle {
+    fun mass(): Double
+    fun charge(): Double
+    fun spin(): Double
+}
+
+class Electron : ElementaryParticle {
+    override fun mass(): Double {
+        return 9.11e-31
+    }
+
+    override fun charge(): Double {
+        return -1.0
+    }
+
+    override fun spin(): Double {
+        return 0.5
+    }
+}
+
+class Proton : ElementaryParticle {
+    override fun mass(): Double {
+        return 1.67e-27
+    }
+
+    override fun charge(): Double {
+        return 1.0
+    }
+
+    override fun spin(): Double {
+        return 0.5
+    }
+}
+
+6) Biorąc pod uwagę interfejs i zajęcia z ćwiczenia 5, które z nich jest prawdziwe?
+	1. Można utworzyć instancję ElementaryParticle: var p = ElementaryParticle ().
+	2. Elektron można utworzyć instancję: elektron val = elektron ().
+	3. Proton można utworzyć instancję: val proton = Proton ().
+	4. Inicjalizacja var p: ElementaryParticle = Electron () jest możliwa.
+	5. Ponowne przypisanie p = Proton () jest możliwe.
+	6. Inicjalizacja var p: Proton = Electron () jest możliwa.
+
+Odp: 2, 3, 4 oraz 5
+
+7) Wyobraź sobie, że w grze NumberGuess chcemy móc wypróbować różne funkcje generowania liczb losowych. Utwórz interfejs RandomNumberGenerator z jedną funkcją fun rnd (minInt: Int, maxInt: Int): Int. Utwórz klasę StdRandom implementującą ten interfejs przy użyciu bieżącego kodu z klasy MainActivity: val span = maxInt - minInt + 1; return minInt + Math.floor (Math.random () * span). toInt (). Utwórz kolejną klasę RandomRandom, również implementującą interfejs, ale z wartością właściwości rnd: Random = Random () (dodaj import java.util. * Do importu) i używając kodu minInt + rnd.nextInt (maxInt - minInt + 1). Dodaj właściwość typu RandomNumberGenerator do działania przy użyciu jednej z implementacji. Zmień funkcję start () w działaniu, aby używać tego interfejsu.
+
+Odp:
+interface RandomNumberGenerator {
+    fun rnd(minInt: Int, maxInt: Int): Int
+}
+
+class StdRandom : RandomNumberGenerator {
+    override fun rnd(minInt: Int, maxInt: Int): Int {
+        val span = maxInt - minInt + 1
+        return minInt + Math.floor(Math.random() * span).toInt()
+    }
+}
+
+class RandomRandom : RandomNumberGenerator {
+    private val random = Random()
+
+    override fun rnd(minInt: Int, maxInt: Int): Int {
+        return minInt + random.nextInt(maxInt - minInt + 1)
+    }
+}
+
+class NumberGuess {
+    var randomNumberGenerator: RandomNumberGenerator? = null
+
+    fun start() {
+        randomNumberGenerator?.let {
+            val number = it.rnd(1, 100)
+            println("Guess the number: $number")
+        }
+    }
+}
+
+8) Co jest nie tak z poniższym kodem?
+
+class Triangle (color: String) {
+     fun changeColor (newColor: String) {
+         color = newColor
+     }
+}
+
+Odp:
+Brak specyfikatora (val lub var) w konstruktorze
+
+9) Utwórz klasę A z jedną właściwością var a: Int. Wykonaj przypisania: (a) ustaw na 1 w deklaracji, (b) ustaw na 2 w bloku init {}, (c) ustaw na 3 w funkcji fun b () {...} i (d ) ustaw go na 4 wewnątrz funkcji głównej.
+
+Odp:
+class A {
+    var a: Int = 1
+
+    init {
+        a = 2
+    }
+
+    fun b() {
+        a = 3
+    }
+}
+
+fun main() {
+    val obj = A()
+    obj.b()
+    obj.a = 4
+}
+
+10) Znajdź krótszy sposób pisania
+
+val a = 42
+val s = "Jeśli dodamy 4 do a otrzymamy" + (a + 4) .toString ()
+
+unikanie łączenia ciągów „...” + „...”
+
+Odp: 
+Możemy zapisać:
+val a = 42
+val s = "Jeśli dodamy 4 do a otrzymamy ${a + 4}"
+
+11) Które z poniższych stwierdzeń jest prawdziwe?
+
+	1. Możesz wykonać przypisanie val a: Int = null.
+	2. Można zapisać val a: Int? = null; val b: Long = a.toLong ().
+	3. Można zapisać val a: Int? = null; val b: Long? = a.toLong ().
+	4. Można zapisać val a: Int? = null; val b: Long? = a?.toLong ().
+	
+Odp:
+4
+
+12) Co jest nie tak z następującą funkcją?
+
+fun multiply10(d:Double):Double {
+    d = d * 10
+    return d
+}	
+
+Odp:
+modyfikowanie wejscia zamiast po prostu zwrócenia wyniku
+	
+13) Co jest nie tak z następującą funkcją?
+
+fun printOut(d:Double) {
+    println(d)
+    return
+}
+
+Odp:
+Nadmiarowy return
+
+14) Czy poniższe stwierdzenia są prawdziwe?
+
+fun printOut(d:Double) {
+    println(d)
+}
+
+jest taki sam jak
+
+fun printOut(d:Double):Unit {
+    println(d)
+}
+
+Odp: Tak
+
+15) Utwórz krótszą wersję tej klasy:
+
+class A(val a:Int) {
+    fun add(b:Int):Int {
+        return a + b
+    }
+    fun mult(b:Int):Int {
+        return a * b
+    }
+}
+
+Odp:
+class A(val a: Int) {
+    fun add(b: Int) = a + b
+    fun mult(b: Int) = a * b
+}
+
+16) Utwórz interfejs AInterface opisujący całą klasę A z Ex. 15.
+
+Odp:
+interface AInterface {
+    val a: Int
+    fun add(b: Int): Int
+    fun mult(b: Int): Int
+}
+
+
+17) Jaki jest wynik
+
+ class A {
+    val xyz:Int = 7
+    fun meth1(xyz:Int):String {
+        return "meth1: " + xyz +
+              " " + this.xyz
+    }
+}
+
+fun main(args:Array<String>) {
+    val a = A()
+    println(a.meth1(42))
+}
+
+Odp: meth1 42 7
+
+18) Biorąc pod uwagę tę klasę
+
+class A {
+    companion object {
+        fun x(a:Int):Int { return a + 7 }
+    }
+}
+
+opisać, jak uzyskać dostęp do funkcji x () z 42 jako parametrem spoza klasy w funkcji println ().
+
+Odp:
+Należy użyć skłądni dostępu do companion object.
+fun main() {
+    println(A.x(42))
+}
+  	
+19) Biorąc pod uwagę tę klasę
+
+class Person {
+    var firstName:String? = null
+    var lastName:String? = null
+    fun setName(fName:String, lName:String) {
+        firstName = fName
+        lastName = lName
+    }
+}
+
+utwórz instancję i użyj nazwanych parametrów, aby ustawić nazwę na John Doe.
+
+Odp:
+fun main() {
+    val person = Person()
+    person.setName(fName = "John", lName = "Doe")
+}
+
+20) Do deklaracji funkcji
+
+fun set(lastName:String,
+    firstName:String,
+    birthDay?:String,
+    ssn:String?) { ... }
+
+dodaj jako domyślne lastName = "", firstName = "", birthDay = null, ssn = null. Następnie wywołaj funkcję, używając nazwanych parametrów, podając tylko lastName = "Smith" i ssn = "1234567890"
+
+Odp:
+fun set(
+    lastName: String = "",
+    firstName: String = "",
+    birthDay: String? = null,
+    ssn: String? = null
+) {
+  ...
+}
+
+fun main() {
+    set(lastName = "Smith", ssn = "1234567890")
+}
+	
+
+

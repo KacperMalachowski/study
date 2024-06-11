@@ -1,0 +1,261 @@
+1) Która z poniższych deklaracji klasy jest prawidłowa?
+
+1.    class Triangle(color:Int) (
+         val coordinates:Array<Pair<Double,Double>>
+             = arrayOf()
+     )
+
+2.    class Triangle(color:Int) {
+         val coordinates:Array<Pair<Double,Double>>
+             = arrayOf()
+     }
+
+3.    class simple_rectangle() {
+         val coordinates:Array<Pair<Double,Double>>
+             = arrayOf()
+     }
+
+4.    class Colored Rectangle(color:Int) {
+         val coordinates:Array<Pair<Double,Double>>
+             = arrayOf()
+     }
+
+Odp: 2
+     
+2) Która z poniższych deklaracji jest prawidłowa?
+
+1.    class Invoice() {
+         variable total:Double = 0.0
+     }
+
+2.    class Invoice() {
+         property total:Double = 0.0
+     }
+
+3.    class Invoice() {
+         Double total =
+         0.0
+     }
+
+4.    class Invoice() {
+         var total:Double = 0.0
+     }
+
+5.    class Invoice() {
+         total:Double = 0.0
+     }     
+     
+Odp: 4
+
+3) Co jest nie tak z następującą klasą (nie technicznie, ale z funkcjonalnego punktu widzenia)??
+
+class Invoice() {
+    val total:Double = 0.0
+}
+
+Odp: Spodziewamy się, ze total bedzie się zmieniał (np. przy dodawaniu pozycji do faktury), jednak uniemożliwia to użycie val.
+
+How can it be fixed?   
+
+Odp: Zamienić val na var
+
+4) Co jest nie tak z następującą klasą?
+
+class Color(val red:Int,
+            val green:Int,
+            val blue:Int)
+{
+    init {
+        red = 0
+        green = 0
+        blue = 0
+    }
+}  
+
+Odp: Brak możliwości nadpisania wartosci stałych (val), nawet w bloku init.
+
+5) Co jest nie tak z następującą klasą?
+
+class Color() {
+    var red:Int
+    var green:Int
+    var blue:Int
+    init {
+      red = 0
+      green = 0
+    }
+}  
+
+Odp: Zmienna blue nie została zainicjalizowana
+  
+6) Napisz klasę Invoice bez bloku init {}, zachowując pełną funkcjonalność. 
+  
+class Invoice(val buyerFirstName:String,
+     val buyerLastName:String,
+     val date:String,
+     val goodName:String,
+     val amount:Int,
+     val pricePerItem:Double){
+     	val buyerFullName:String
+     	val totalPrice:Double
+     	init {
+         buyerFullName = buyerFirstName + " " +
+         buyerLastName
+  	 totalPrice = amount * pricePerItem
+     	}
+}
+
+Odp:
+class Invoice(
+    val buyerFirstName: String,
+    val buyerLastName: String,
+    val date: String,
+    val goodName: String,
+    val amount: Int,
+    val pricePerItem: Double
+) {
+    val buyerFullName: String = "$buyerFirstName $buyerLastName"
+    val totalPrice: Double = amount * pricePerItem
+}
+  
+7) Dodaj metodę goodInfo (), która zwraca coś w rodzaju „5 kawałków jabłka”. Wskazówka: użyj funkcji amount.toString (), aby przekonwertować kwotę na ciąg.  
+  
+Odp:
+class Invoice(
+    val buyerFirstName: String,
+    val buyerLastName: String,
+    val date: String,
+    val goodName: String,
+    val amount: Int,
+    val pricePerItem: Double
+) {
+    val buyerFullName: String = "$buyerFirstName $buyerLastName"
+    val totalPrice: Double = amount * pricePerItem
+
+    fun goodInfo(): String {
+        return "${amount.toString()} kawałków $goodName"
+    }
+}
+
+8) Utwórz klasę Person z parametrami konstruktora: firstName (a String), lastName (a String), ssn (a String), dateOfBirth (a String) i gender (a Char). Upewnij się, że parametry są później dostępne jako właściwości wystąpienia i można je później zmienić.
+  
+Odp:
+class Person(
+    var firstName: String,
+    var lastName: String,
+    var ssn: String,
+    var dateOfBirth: String,
+    var gender: Char
+)
+
+9) Utwórz instancję klasy Person z poprzedniego ćwiczenia, używając imienia John Smith, daty urodzenia 1997-10-23, SSN 0123456789 i płci M. Przypisz ją do zmiennej val person1. Wskazówka: użyj pojedynczych cudzysłowów dla literałów Char, takich jak „A” lub „B”.
+
+Odp:
+val person1 = Person(
+  firstName = "John",
+  lastName = "Smith",
+  ssn = "0123456789",
+  dateOfBirth = "1997-10-23",
+  ender = 'M'
+)
+
+10) Utwórz klasę GameUser w odrębnym pliku.
+class GameUser(val firstName:String,
+               val lastName:String,
+               val birthday:String,
+               val userName:String,
+               val registrationNumber:Int,
+               val userRank:Double) {
+}
+
+Odp:
+// GameUser.kt
+
+class GameUser(
+    val firstName: String,
+    val lastName: String,
+    val birthday: String,
+    val userName: String,
+    val registrationNumber: Int,
+    val userRank: Double
+)
+
+
+11) Przepisz wystąpienie Person z ćwiczenia 9, używając nazwanych parametrów.
+
+Odp:
+val person1 = Person(
+  firstName = "John",
+  lastName = "Smith",
+  ssn = "0123456789",
+  dateOfBirth = "1997-10-23",
+  gender = 'M'
+)
+
+12) Dodaj właściwość var gameUser do MainActivity i zainicjuj ją z imieniem John Doe, nazwą użytkownika jdoe, datą urodzenia 1900-01-01, numerem rejestracji = 0 i pozycją użytkownika = 0,0. Użyj nazwanych parametrów. Wskazówka: Aby zainicjować prawo własności w deklaracji, użyj var gameUser = GameUser (...).
+
+Odp:
+class MainActivity {
+    var gameUser = GameUser(
+        firstName = "John",
+        lastName = "Doe",
+        birthday = "1900-01-01",
+        userName = "jdoe",
+        registrationNumber = 0,
+        userRank = Pair(0, 0)
+    )
+}
+
+13) Zaktualizuj klasę Person z poprzednich ćwiczeń: dodaj wartość domyślną ”” (pusty ciąg) do parametru ssn. Wykonaj instancję przy użyciu nazwanych parametrów, zezwalając na zastosowanie domyślnej wartości SSN.
+
+Odp:
+class Person(
+    var firstName: String,
+    var lastName: String,
+    var dateOfBirth: String,
+    var gender: Char,
+    var ssn: String = ""
+)
+
+val person = Person(
+        firstName = "John",
+        lastName = "Doe",
+        dateOfBirth = "1990-01-01",
+        gender = 'M'
+    )
+
+14) Zaktualizuj klasę GameUser Dodaj domyślną wartość ”” (pusty ciąg znaków) do daty urodzin i dodaj 0,0 do parametru userRank.
+
+Odp:
+class GameUser(
+    val firstName: String,
+    val lastName: String,
+    val birthday: String = "",
+    val userName: String,
+    val registrationNumber: Int,
+    val userRank: Pair<Double, Double> = Pair(0.0, 0.0)
+)
+
+15) W klasie Person z poprzednich ćwiczeń dodaj konstruktor pomocniczy z parametrami firstName (a String), lastName (a String), ssn (a String) i gender (a Char). Niech wywoła główny konstruktor, ustawiając brakującą datęOfBirth na 0000-00-00. Utwórz wystąpienie za pomocą konstruktora pomocniczego.
+
+Odp:
+class Person(
+    var firstName: String,
+    var lastName: String,
+    var dateOfBirth: String,
+    var gender: Char,
+    var ssn: String = ""
+) {
+    constructor(firstName: String, lastName: String, ssn: String, gender: Char) : this(
+        firstName = firstName,
+        lastName = lastName,
+        dateOfBirth = "0000-00-00",
+        gender = gender,
+        ssn = ssn
+    )
+}
+
+
+
+
+     
