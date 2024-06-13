@@ -289,8 +289,7 @@ Na koniec podstawiamy do $E_i=A+Bi-i^2$
   E_i=n^2+2n+2i-i^2
 \end{align*}
 
-Zatem spodziewana kroków wynosi $n^2+2n+2i-i^2$ co daje $O(n^2)$.
-To zaś dowodzi, że spodziewana liczba kroków jest rzędu $O(n^2)$
+Zatem spodziewana kroków wynosi $n^2+2n+2i-i^2$, jest ona zależna od wartości zmiennej $i$, która określa jak daleko od początku spaceru losowego zaszedł algorytm. Ponieważ $i$ dąży do $n$, ale zanim go osiągnie algorytm się skończy z powodu bariery absorbującej ustanowionej na wartości równej $n$ to wyrażenie $2i-i^2$ nie jest istotne w analizie górnego oszacowania liczby kroków. Z tego też powodu otrzymujemy spodziewaną liczbę kroków rzędu $O(n^2)$.
 
 \begin{thebibliography}{00}
   \bibitem{BorowskaAlgorytmy}
