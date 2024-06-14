@@ -1,0 +1,369 @@
+object Log{
+    fun d(a: String, b:String): Unit{
+        println(b)
+    }
+} 
+
+
+1) Zbuduj klasę Club i dodaj funkcję addMembers z pojedynczymi nazwami parametrów vararg.
+Wewnątrz funkcji użyj
+
+println("Number: " + names.size)
+println(names.joinToString(" : "))
+
+do wydrukowania parametrów. Utwórz funkcję main (args: Array <String>) poza klasą,
+utwórz Club i wywołaj jego funkcję addMembers () z trzema nazwami „Hughes,
+John ”, „ Smith, Alina ” i „ Curtis, Solange ”.
+
+Odp:
+class Club {
+    fun addMembers(vararg names: String) {
+        println("Number: " + names.size)
+        println(names.joinToString(" : "))
+    }
+}
+
+fun main(args: Array<String>) {
+    val club = Club()
+    club.addMembers("Hughes, John", "Smith, Alina", "Curtis, Solange")
+}
+
+2) Jaki będzie wynik działania
+
+open class A(open val a:Int) {
+    fun x() {
+        Log.d("LOG",
+              "A.x() -> a = ${a}")
+    }
+    fun q() {
+        Log.d("LOG",
+              "A.q() -> a = ${a}")
+    }
+}
+
+class B(override val a:Int) : A(37) {
+    fun y() {
+        Log.d("LOG",
+              "B.y() -> a = ${a}")
+        q()
+    }
+}
+
+// wewnątrz jakiejś funkcji aktywności:
+
+val b = B(7)
+b.y()
+
+Zauważ, że Log.d ("TAG", ...) wypisuje drugi argument do konsoli.
+
+Odp: 
+B.y() -> a = 7
+A.q() -> a = 37
+
+3) Jaki będzie wynik działania
+
+open class A() {
+    private var g:Int = 99
+    fun x() {
+        Log.d("LOG", "A.x() : g = ${g}")
+    }
+    fun q() {
+           Log.d("LOG", "A.q() : g = ${g}")
+    }
+}
+
+class B : A() {
+    var g:Int = 8
+    fun y() {
+        Log.d("LOG", "B.y() : g = ${g}")
+        q()
+    }
+}
+
+// wewnątrz jakiejś funkcji aktywności:
+
+val b = B()
+b.x()
+b.y()
+
+Odp:
+A.x() : g = 99
+B.y() : g = 8
+A.q() : g = 99
+
+4) W Ex. 3, usuń prywatne z deklaracji własności i ustaw klasę B.
+zastępuje właściwość g z klasy A. Jakie będą dane wyjściowe?
+
+open class A() {
+    open var g: Int = 99
+    fun x() {
+        Log.d("LOG", "A.x() : g = ${g}")
+    }
+    fun q() {
+        Log.d("LOG", "A.q() : g = ${g}")
+    }
+}
+
+class B : A() {
+    override var g: Int = 8
+    fun y() {
+        Log.d("LOG", "B.y() : g = ${g}")
+        q()
+    }
+}
+
+A.x() : g = 8
+B.y() : g = 8
+A.q() : g = 8
+
+5) Która z poniższych klas jest poprawna? W przypadku każdej niepoprawnej klasy opisz problem.
+
+1.    class TheClass {
+          var a:Int = 7
+          fun function() {
+              val a = 7
+          }
+      }
+      
+2.    class TheClass {
+          fun function(a:String) {
+              val a = 7
+          }
+      }
+      
+3.    class TheClass {
+          fun function() {
+              println(a)
+              val a = 7
+          }
+      }
+      
+4.    class TheClass {
+          fun function():Int {
+              val a = 7
+              return a - 1
+          }
+      }
+      
+5.    class TheClass {
+          fun function1():Int {
+              val a = 7
+              return a - 1
+          }
+          fun function2():Int {
+              a = 8
+              return a - 1
+          }
+      }     
+
+Odp: 1 i 4
+
+6) Czy możesz zgadnąć, co się stanie, jeśli to uruchomisz?
+
+class Line(val x1:Double, val y1:Double,
+           val x2:Double, val y2:Double) {
+{
+    override fun toString() = toString() +
+        " (${x1},${y1}) -> (${x2},${y2})"
+}
+
+
+Odp: Tak
+Line@hashcode (1.0,2.0) -> (3.0,4.0)
+
+7) Masz singleton object w pakiecie com.example.util
+
+object Util {
+    fun add10(a:Int) = a + 10
+    fun add100(a:Int) = a + 100
+}
+
+i klienta
+
+package com.example
+import com.example.util.Util
+class A(q:Int) {
+    val x10:Int = Util.add10(q)
+    val x100:Int = Util.add100(q)
+}
+
+Czy mógłbyś wymyślić sposób na przepisanie pliku Util.kt, aby nie używał deklaracji obiektu {}? 
+Jak będzie wyglądał kod klienta?
+
+Odp: 
+package com.example.util
+
+class Util {
+    companion object {
+        fun add10(a: Int) = a + 10
+        fun add100(a: Int) = a + 100
+    }
+}
+
+package com.example
+import com.example.util.Util.Companion.add10
+import com.example.util.Util.Companion.add100
+
+class A(q: Int) {
+    val x10: Int = add10(q)
+    val x100: Int = add100(q)
+}
+
+8) Given that Math.log() calculates the logarithm of a number, and with Math residing
+inside package java.lang, rewrite
+
+Biorąc pod uwagę, że Math.log () oblicza logarytm liczby i rezyduje wewnątrz Math pakietu java.lang, przepisz
+
+package com.example
+
+class A {
+  fun calc(a:Double) = Math.log(a)
+}
+
+takie, że Math. nie jest już potrzebne.
+
+Odp:
+package com.example
+
+import kotlin.math.log
+
+class A {
+    fun calc(a: Double) = log(a)
+}
+
+9) Dla których z klas danych:
+
+data class Point2D(val x:Double, val y:Double)
+data class Point3D(val x:Double, val y:Double, val z:Double)
+
+które z poniższych stwierdzeń jest prawdziwe (== oznacza równe)?
+
+1. Point2D(0, 1) == Point2D(1, 0)
+2. Point2D(1, 0) == Point3D(1, 0, 0)
+3. Point2D(1, 0).x == Point3D(1, 0, 0).x
+4. Point2D(1, 0) == Point2D(1.0, 0)
+5. Point2D(1, 0) == Point2D(1, 0)
+
+Opisz, dlaczego lub dlaczego nie.
+
+Odp:
+1. Fałsz - Różne koordynaty
+2. Fałsz - Różne klasy
+3. Prawda - Wartości x są takie same
+4. Prawda - Oba skonwertowane na double
+5. Prawda - Te same koordynaty
+
+10) Czy możesz zgadnąć, co można zrobić z właściwościami val zamiast var dla set (value)?
+
+Odp: Nie można do nich przypisać wartości.
+
+11) Napisz właściwość str, która robi to samo, co funkcja toString () (czy jest to możliwe
+zapisać obj.str zamiast obj.toString ()).
+
+Odp:
+class MyClass {
+    val str: String
+        get() = toString()
+}
+Tak
+
+12) Dodaj operatory - i + do klasy Vector. Obliczenie polega na dodaniu lub
+odejmowanie elementów dx i dy: Vector (this.dx + v2.dx, this.dy + v2.dy) i
+Vector (this.dx - v2.dx, this.dy - v2.dy), jeśli v2 jest parametrem funkcji operatora.
+
+Odp:
+data class Vector(val dx: Int, val dy: Int) {
+    operator fun plus(v: Vector) = Vector(this.dx + v.dx, this.dy + v.dy)
+    operator fun minus(v: Vector) = Vector(this.dx - v.dx, this.dy - v.dy)
+}
+
+13) Utwórz klasę Concatenator, która umożliwia konkatenację ciągów za pomocą funkcji add (s: String).
+Dodaj kolejną funkcję, tak aby można było napisać następujące elementy, aby zobaczyć
+czy połączony ciąg zawiera jakiś podciąg.
+
+val c = Concatenator()
+c.add("Hello")
+c.add(" ")
+c.add("world")
+val contained = "ello" in c
+
+Odp:
+class Concatenator {
+    private val sb = StringBuilder()
+
+    fun add(s: String) {
+        sb.append(s)
+    }
+
+    operator fun contains(substring: String): Boolean {
+        return sb.contains(substring)
+    }
+
+    override fun toString(): String {
+        return sb.toString()
+    }
+}
+
+val c = Concatenator()
+c.add("Hello")
+c.add(" ")
+c.add("world")
+val contained = "ello" in c
+println(contained)
+
+14) Zdefiniuj i zainicjuj IntArray z elementami 100, 99, 98, ..., 0. Przypisz go do val arr.
+
+Odp:
+val arr = IntArray(101) { 100 - it }
+
+15) Utwórz tablicę BooleanArray z wartościami true, false, true.
+
+Odp:
+val boolArray = booleanArrayOf(true, false, true)
+
+16) Utwórz zmienny (mutable) zbiór owoców (fruits) val z elementami Apple, Banana, Grape i Engine. 
+W osobnym zbiorze dodaj Cherry do zbiór. W innym wyrażeniu usuń Engine z zestawu. 
+Utwórz nowy zestaw val fruits5 z tego zestawu w wyniku filtrowania elementy z pięcioma znakami. 
+
+Odp:
+val fruits = mutableSetOf("Apple", "Banana", "Grape", "Engine")
+fruits.add("Cherry")
+fruits.remove("Engine")
+val fruits5 = fruits.filter { it.length == 5 }.toSet()
+
+
+17) Utwórz listę [1, 2, 3, 4, ..., 100]. Następnie, używając redukcji, oblicz z niej liczbę 1 * 2 * 3 * ... * 100.
+Podpowiedź: Możesz przekonwertować zakres (od..do) do listy za pomocą funkcji toList ().
+
+Odp:
+val list = (1..100).toList()
+val result = list.reduce { acc, i -> acc * i }
+
+18) With two lists val fruits = listOf("Bananas", "Apples", "Oranges") and val prices = listOf(1.69, 2.19, 2.79), 
+and a data class Fruit(val name:String, val price:Double), perform a zipping with the resulting list containing Fruit elements.
+
+Z dwoma listami val owoce = listOf („Banany”, „Jabłka”, „Pomarańcze”) i ceny val = listaOf (1,69, 2,19, 2,79),
+i klasę danych Fruit (val nazwa: String,val cena: Double), wykonaj zipping z wynikową listą zawierającą elementy Fruit.
+
+Odp:
+data class Fruit(val name: String, val price: Double)
+
+val fruits = listOf("Bananas", "Apples", "Oranges")
+val prices = listOf(1.69, 2.19, 2.79)
+val fruitList = fruits.zip(prices) { name, price -> Fruit(name, price) }
+
+19) Jeśli dwie zmienne a i b są identyczne, które z poniższych zdań są prawdziwe?
+
+1. a i b odnoszą się do tego samego obiektu.
+2. a == b  daje prawdę.
+3. a! == b daje fałsz.
+
+Odp: Wszystkie
+
+20) Jeśli dwie zmienne a i b są równe, a == b, które z poniższych zdań są prawdziwe?
+
+1. a.equals (b) musi być prawdziwe.
+2. a != B  daje fałsz.
+3. a.hashCode() == b.hashCode() musi mieć wartość true.
+
+Odp: Wszystkie

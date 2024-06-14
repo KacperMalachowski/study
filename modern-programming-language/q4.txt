@@ -1,0 +1,156 @@
+1) Napisz jako funkcję lambda: funkcja, która przyjmuje s: String i num: Int i zwraca łańcuch z liczbą połączonych kopii s.
+
+Odp:
+val repeatString: (String, Int) -> String = { s, num -> s.repeat(num) }
+
+2) Przepisz używając it.
+
+val f : (String) -> String = { s:String -> s + "!" }
+
+Odp:
+val f: (String) -> String = { it + "!" }
+
+3) Podobnie jak w przypadku klasy Pair, utwórz klasę Quadruple, która może pomieścić cztery elementy danych. Utwórz wystąpienie z przykładowymi elementami typu Int, Int, Double i String.
+
+Odp:
+data class Quadruple<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
+
+val quadruple = Quadruple(1, 2, 3.0, "four")
+
+4) Napisz generyczną klasę Sorter z parametrem typu T i odpowiednim powiązaniem typu, który ma listę wartości val list:MutableList<T>  i funkcję fun add(value:T) Przy każdym wywołaniu funkcji parametr musi zostać dodany do listy, a właściwość listy musi zostać posortowana zgodnie z jej naturalną kolejnością sortowania.
+
+Odp:
+class Sorter<T : Comparable<T>> {
+    val list: MutableList<T> = mutableListOf()
+
+    fun add(value: T) {
+        list.add(value)
+        list.sort()
+    }
+}
+
+5) Do przykładu kalkulatora (CustomAnnotationsAndVisibility.txt) dodaj nową adnotację @NotNegative i nową operację sqrt() dla pierwiastka kwadratowego. Upewnij się, że ujemny parametr dla tego operatora jest niedozwolony. Uwaga: rzeczywisty pierwiastek kwadratowy jest obliczany za pomocą java.lang.Math.sqrt ().
+
+Odp:
+import kotlin.annotation.AnnotationTarget.*
+import kotlin.annotation.AnnotationRetention.*
+
+@Target(FUNCTION, PROPERTY_GETTER, PROPERTY_SETTER, FIELD, VALUE_PARAMETER)
+@Retention(RUNTIME)
+annotation class NotNegative
+
+class Calculator {
+    @NotNegative
+    fun sqrt(value: Double): Double {
+        require(value >= 0) { "Parameter must be non-negative" }
+        return Math.sqrt(value)
+    }
+}
+
+6) Biorąc pod uwagę klasę danych data class Employee (val lastName: String, val firstName: String, val ssn: String) i listę
+
+val l = listOf(
+    Employee("Smith", "Eve", "012-12-5678"),
+    Employee("Carpenter", "John", "123-06-4901"),
+    Employee("Cugar", "Clara", "034-00-1111"),
+    Employee("Lionsgate", "Peter", "965-11-4561"),
+    Employee("Disney", "Quentin", "888-12-3412")
+)
+
+pobierz nową niezmienną listę z tej posortowanej według numeru SSN.
+
+Odp:
+val sortedList = l.sortedBy { it.ssn }
+
+7) Mając listę pracowników z ćwiczenia 6, utwórz niezmienną map mapującą numery SSN do pracowników.
+
+Odp:
+val ssnToEmployeeMap = l.associateBy { it.ssn }
+
+8) Jaki jest wynik
+
+listOf(listOf(1, 2), listOf(3, 4)).flatten()
+
+Odp: listOf(1, 2, 3, 4)
+
+9) Jaki jest wynik
+
+listOf(listOf(1, 2), listOf(3, 4)).flatMap { it.map { it.toString() } }
+
+Odp:
+listOf("1", "2", "3", "4")
+
+10) Mając listę pracowników z ćwiczenia 6, utwórz nową niezmienną listę zawierającą tylko numery SSN zaczynające się od 0. Wskazówka: String.startsWith (...) sprawdza, czy ciąg znaków zaczyna się od określonych znaków.
+
+Odp:
+val ssnStartingWithZero = l.filter { it.ssn.startsWith("0") }.map { it.ssn }
+
+11) Utwórz sprawdzenie dla listy listOf (1, 2, 3, 4), aby zobaczyć, czy wszystkie elementy są większe niż 0.  
+
+Odp:
+val allGreaterThanZero = listOf(1, 2, 3, 4).all { it > 0 }
+
+12) Mając listę l typu Int, znajdź sposób jednowyrażeniowy, nie używając if, aby zgłosić wyjątek, jeśli lista zawiera 42. Wskazówka: użyj funkcji find () lub zawiera (), prawdopodobnie takeIf () i ?.run. 
+     
+Odp:
+l.find { it == 42 }?.let { throw Exception("List contains 42") }
+
+13) Biorąc pod uwagę klasę danych, data class Parcel (val receiverId: Int, val weight: Double) i listę
+
+val l = listOf( Parcel(1267395, 1.45),
+    Parcel(1515670, 0.46),
+    Parcel(8345674, 2.50),
+    Parcel(3418566, 1.47),
+    Parcel(3491245, 3.04)
+)
+
+obliczyć sumę wag bez używania pętli for lub while.
+
+Odp:
+val totalWeight = l.sumOf { it.weight }
+
+14) Utwórz zegar ClockTwiceAsFast z konstruktorem pobierającym czas z zegara systemowego UTC. Następnie zegar powinien działać dwa razy szybciej. Zignoruj informacje o strefie. Aby udowodnić, że działa zgodnie z założeniami, użyj
+
+import java.time.*
+val myClock = ClockTwiceAsFast()
+Log.d("LOG", LocalDateTime.now(myClock).format(
+      DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+Thread.sleep(1000L)
+Log.d("LOG", LocalDateTime.now(myClock).format(
+      DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+
+Odp:
+import java.time.*
+
+class ClockTwiceAsFast : Clock() {
+    private val systemUTC = Clock.systemUTC()
+
+    override fun getZone(): ZoneId = systemUTC.zone
+
+    override fun withZone(zone: ZoneId): Clock = systemUTC.withZone(zone)
+
+    override fun instant(): Instant {
+        val now = systemUTC.instant()
+        return now.plusMillis(now.toEpochMilli() - systemUTC.millis())
+    }
+}
+
+val myClock = ClockTwiceAsFast()
+Log.d("LOG", LocalDateTime.now(myClock).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+Thread.sleep(1000L)
+Log.d("LOG", LocalDateTime.now(myClock).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+
+15) Napisz funkcję rozszerzającą String, która pozwoli nam pisać "Hello" % ".*ll.*"
+zamiast
+
+"Hello".matches(Regex(".*ll.*"))
+
+Wskazówka: operator% pisze jako .rem ().
+
+Odp:
+ operator fun String.rem(regex: String): Boolean {
+    return this.matches(Regex(regex))
+}
+ 
+      
+      

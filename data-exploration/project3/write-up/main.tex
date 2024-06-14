@@ -179,6 +179,49 @@ Stworzone zostały w ramach badań: Adarsh Pal Singh, Vivek Jain, Sachin Chaudha
 
 \chapter*{Projekt w RSES}
 
+Poniżej przedstawiono zdjęcia projektu w programie RSES.
+Projekt 0 odpowiedzialny jest za wczytanie i dyskretyzacje danych.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{project0.png}
+\end{figure}
+
+Poniżej przedstawiono przykładowy projekt odpowiedzialny za eksploracje danych, pozostałe projekty wyglądają tak samo.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{project1.png}
+\end{figure}
+
+\subsection*{Opis składowych projektu}
+
+Projekt podzielono na dwa rodzaje projektów, jeden odpowiedzialny za dyskretyzacje danych oraz drugi za uzyskiwanie wyników.
+Cały projekt składa się łacznie z sześciu projektów, jednego odpowiedzialnego za dyskretyzacje i pięciu zawierających po dwa podziały danych.
+
+\subsubsection*{Dyskretyzacja}
+
+W projekcie zero, dane wczytane z pliku .tab utworoznego na oryginalnego pliku .csv podlegają dyskretyzacji, która wykonywana jest przy pomocy cięć utworzonych metodą lokalną z pominięciem atrybutów typu symbolic.
+
+Tak przetworzone dane zapisano wp liku occupacyD.tab, który posłużył jako wejście dla pozotałych projektów.
+
+\subsubsection*{Proces eksploracji}
+
+Każdy projekt z wynikami składa się z dwóch tabel z danymi wczytanymi z pliku occupacyD.tab, które zostały podzielone w sposób losowy na dwie kolejne tabele każda służące za biory treningowe i testowe.
+
+W ten sposób w każdym projekcie uzyskano cztery tabele wejściowe dla algorytmów oraz dwa podziały.
+
+Następnie z każdej tabel (T1, T2, T3 i T4) wyprowadzono zbiory reguł czterama różnymi algorytmami.
+
+\begin{itemize}
+  \item Wyczerpujący (Ex) - algorytm nie posiada parametrów.
+  \item Genetyczny (Gen) - z paramterem prędkości ustawionym na duzą oraz parametrem reduktów o wartosci 10.
+  \item Pokryciowy (Cov) - z parametrem pokrycia na 0.9.
+  \item LEM2 (Lem) - z paramterem pokrycia na 0.9.
+\end{itemize}
+
+Następnie skorzystano z przeciwnej tabeli (np. dla tabeli 1, tabelą przeciwną jest tabela 2) do przetestowania skuteczności tak utworzonych reguł. Zbiory reguł nazwano w formacie "[nazwa tabeli treningowej]Mod[skrót algorytmu]", na przykład dla zestawu tabel 4 i 3, gdzie to tabela 4 jest zbiorem treningowym algorytmu wyczerpującego zbiór reguł ma nazwę "T4ModEx". Podobnie nazwano wyniki poszczególnych testów tj. "[nazwa tabeli testowej]Wyn[skrót algorytmu]", więc dla powyższego przykładu wyniki nazywają się "T3WynEx".
+
+Nazewnictwo to zastosowano we wszystkich projektach, poza projektem zerowym.
 
 \begin{landscape}
 \thispagestyle{mylandscape}
@@ -191,9 +234,9 @@ W poniższej tabeli przedstawiono wyniki dla poszczególnych klasyfikatorów. Wy
   \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
   \hline
   \backslashbox{Klasyfikator}{Iteracja}  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 & 19 & 20 & Średnia \\ \hline
-   Wyczerpujący  & 99.6\% & 99.4\% & 99.6\% & 99.5\% & 99.5\% & 99.6\% & 99.6\% & 99.5\% & 99.5\% & 99.7\% & 99.5\% & 99.4\% & 99.3\% & 99.6\% & 99.6\% & 99.4\% & 99.3\% & 99.7\% & 99.7\% & 99.6\% & 99.5\% \\ \hline
-   Genetyczny    & 99.6\% & 99.5\% & 99.6\% & 99.6\% & 99.5\% & 99.6\% & 99.6\% & 99.5\% & 99.6\% & 99.7\% & 99.5\% & 99.5\% & 99.4\% & 99.6\% & 99.6\% & 99.4\% & 99.3\% & 99.7\% & 99.7\% & 99.6\% & 99.5\% \\ \hline
-   Pokryciowy    & 83.4\% & 84.5\% & 84.1\% & 86.8\% & 83.9\% & 85.6\% & 83.8\% & 85.1\% & 57.8\% & 84.3\% & 84.5\% & 83.6\% & 85.3\% & 57.9\% & 83.6\% & 58.8\% & 81.6\% & 57.6\% & 83.5\% & 84.4\% & 79.0\% \\ \hline
+   Wyczerpujący  & 99.6\% & 99.4\% & 99.6\% & 99.5\% & 99.5\% & 99.6\% & 99.6\% & 99.5\% & 99.5\% & 99.7\% & 99.5\% & 99.4\% & 99.3\% & 99.6\% & 99.6\% & 99.4\% & 99.3\% & 99.7\% & 99.7\% & 99.6\% & 99.53\% \\ \hline
+   Genetyczny    & 99.6\% & 99.5\% & 99.6\% & 99.6\% & 99.5\% & 99.6\% & 99.6\% & 99.5\% & 99.6\% & 99.7\% & 99.5\% & 99.5\% & 99.4\% & 99.6\% & 99.6\% & 99.4\% & 99.3\% & 99.7\% & 99.7\% & 99.6\% & 99.56\% \\ \hline
+   Pokryciowy    & 83.4\% & 84.5\% & 84.1\% & 86.8\% & 83.9\% & 85.6\% & 83.8\% & 85.1\% & 57.8\% & 84.3\% & 84.5\% & 83.6\% & 85.3\% & 57.9\% & 83.6\% & 58.8\% & 81.6\% & 57.6\% & 83.5\% & 84.4\% & 79.01\% \\ \hline
    LEM2          & 92.5\% & 93.2\% & 92.8\% & 93.1\% & 92.1\% & 93.0\% & 93.2\% & 92.6\% & 92.3\% & 93.2\% & 93.0\% & 92.1\% & 92.2\% & 93.3\% & 92.3\% & 92.7\% & 92.5\% & 92.8\% & 92.4\% & 93.0\% & 92.72\% \\ \hline
   \end{tabular}}
   \end{table}
@@ -202,12 +245,14 @@ W poniższej tabeli przedstawiono wyniki dla poszczególnych klasyfikatorów. Wy
 
 \chapter*{Wnioski}
 
-Jak można zobaczyć po wynikach walidacji modelu, najlepszy wynik uzyskano na ścieżkach nr 2 oraz 5. Na podsatwie powyższych wyników, stwierdzić można że przygotowanie danych wykazuje poprawę względem danych nieprzygotowanych, a dyskretyzacja przy odpowiednio dobranej kolumnie danych pozwala uzyskać lepsze wyniki niż możnaby uzyskać przy pomocy normalizacji.
+Najlepszy wynik spośród wszystkich trzech projektów odnotowano na drugiej ścieżce w projekcie nr 4, było to 99.56\%. To jest poprawa o 0.03 punkta procentowego względem drugiej ścieżki w drugim projekcie.
 
-Zwrócić należy uwagę na fakt, że dyskretyzacja znacząco pogorszyła ocenę jakości w przypadku gdy brakujace wartości zastąpiono zerami. W pozostałych przypadkach natomiast wartości te nie odbiegają znacząco od siebie.
+Pokazuje to, że algorytm genetyczny może poprawić wyniki klasyfikacji w stosunku do bardziej zaawansowanych algorytmów takich jak k-NN zastosowany w projekcie drugim.
 
-Ponadto na podstawie powyższych danych wysnuć należy wniosek, że odpowiedni dobór atrybutów poddanych dyskretyzacji pozwala uzyskać lepsze wyniki niż przeprowadzenie dyskretyzacji na całym zbiorze atrybutów.
+Ponadto dobry algorytm dyskretyzacji użyty w programie RSES pozwala wyciągnąć z danych więcej szczegółów.
 
-Ostatecznie przygotowanie danych przed ich wykorzystaniem pozwala uzyskać znacząco lepsze rezultaty niż korzystanie z danych surowych. W świecie cyfryzacji, przygotowanie nawet dużych zbiorów danych nie stanowi zazwyczaj wyzwania. Przynajmniej nie stanowi wyzwania, które usprawiedliwia wykorzystanie surowego zbioru danych podczas analizy.
+Natomiast wyniki ostatniego projektu pokazują jak dużą rolę w eksploracji danych odgrywa odpowiedni podział danych, różnica rzędu 20 punktów procentowych przy jedynej różnicy polegającej na innym podziale danych pokazuje to jednoznacznie.
+
+Reasumując, podczas eksploracji danych istotnym jest nie tylko samo przygotowanie danych czy dobór klasyfikatora, ale również odpowiedni dobór podziału na zbiory treningowe i testowe, zapewniający jak największe zróżnicowanie danych w zbiorze treningowym
 
 \end{document}
