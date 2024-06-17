@@ -164,39 +164,47 @@ Zdarzenia są niezależne gdy $P(A \cap B) = P(A)$ \cite{MetProb}.
 
 Proces rzutów monetą jest częstym przykładem stosowanym do prezentacji klasycznego rachunku prawdopodobieństwa, głównie przez swoją prostote w odniesieniu do namacalnego eksperymentu, który każdy moze przeprowadzić na żywo.
 
-Jako $X_i$ oznaczmy zmienną, która przyjmuje wartość 1 jeśli rzut rozpoczyna nowy ciąg i 0 w przeciwnym wypadku. Ponieważ pierwszy rzut rozpoczyna nowy ciąg powtórzeń, a więc $P(X_1=1)=1$ to rozważmy rzuty od 2 do n. 
+Wartością oczekiwaną zmiennej losowej X nazywamy wartość sumy
+\[
+  E(X)=\sum_{k}P(X=k)*k
+\]
 
-Ponieważ zmienna $X_i$ przyjmuje wartość 1 tylko gdy rozpoczynany jest nowy ciąg to wartośćią oczekiwaną ciagów powtórzeń będzie suma prawdopodobieństwa dla zmiennej $X_i$, która ma wartosć 1.
+gdzie przez k oznaczono możliwe wartości dla zmiennej X \cite{OczekiwanaMIMUW}.
+
 
 
 
 \chapter*{Rozwiązanie}
 
-Spodziewana liczba powtórzeń zatem jest sumą wartości tej zmiennej dla poszczególnych rzutów, stąd:
+Jako $X_i$ oznaczmy zmienną, która przyjmuje wartość 1 jeśli rzut rozpoczyna nowy ciąg i 0 w przeciwnym wypadku. Ponieważ pierwszy rzut rozpoczyna nowy ciąg powtórzeń, a więc $P(X_1=1)=1$ to rozważmy rzuty od 2 do n. 
 
-\begin{math}
-  \centering
-  E(liczbaCiagow) = 1 + \sum_{i=2}^{n}E(X_i)
-\end{math}
+Korzystając zatem ze wzoru na wartosć oczekiwaną zmiennej losowej otrzymujemy:
 
-Ponieważ kolejne rzuty są niezależne, prawdopodobieństwo rozpoczęcia nowego ciągu wynosi $\frac{1}{2}$ dla każdego rzutu. Stąd $E(X_i)=P(X_i=1)=\frac{1}{2}$. Teraz obliczmy sumę wszystkich $X_i$ od i = 2:
+\[
+  E(liczbaCiagow) = \sum_{i=2}^{n}E(X_i)
+\]
 
-\begin{math}
-  \centering
-  \sum_{i=2}^{n}E(X_i) = \sum_{i=2}^{n}\frac{1}{2} = (n-1)*\frac{1}{2} = \frac{n-1}{2}
-\end{math}
+Ponieważ kolejne rzuty są niezależne, prawdopodobieństwo rozpoczęcia nowego ciągu wynosi $P(X_i=1)=\frac{1}{2}$ dla każdego rzutu. Stąd: \[E(X_i)=P(X_i=1)*1+P(X_i=0)*0=P(X_i=1)=\frac{1}{2}\]. Teraz obliczmy sumę wszystkich $X_i$ od i = 2:
+
+\[
+  E(liczbaCiagow)=\sum_{i=2}^{n}E(X_i) = \sum_{i=2}^{n}\frac{1}{2} = (n-1)*\frac{1}{2} = \frac{n-1}{2}
+\]
 
 Ponieważ pierwszy rzut zawsze rozpoczyna nowy ciąg to do tak uzyskanego wzoru dodajemy 1, stąd:
 
-\begin{math}
-  \centering
+\[
   E(liczbaCiagow) = 1 + \frac{n-1}{2} = \frac{n+1}{2}
-\end{math}
+\]
 
 Zatem odpowiedź to: Spodziewana liczba ciagów powtórzeń wynosi $\frac{n+1}{2}$.
 
 \begin{thebibliography}{00}
   \bibitem{MetProb}
-  Kołtowski, W. (2020, November 4). Metody probabilistyczne: 4. Niezależność. Instytut Informatyki PP.\\ Retrieved from https://www.cs.put.poznan.pl/wkotlowski/mp/04\_niezaleznosc.pdf
+  Kołtowski, W. (2020, November 4). Metody probabilistyczne: 4. Niezależność. Instytut Informatyki PP.\\ \url{https://www.cs.put.poznan.pl/wkotlowski/mp/04\_niezaleznosc.pdf}
+
+  \bibitem{OczekiwanaMIMUW}
+  Uniwersytet Warszawski. Wartość oczekiwana\\
+  \url{http://smurf.mimuw.edu.pl/uczesie/?q=node/181}
+
 \end{thebibliography}
 \end{document}
