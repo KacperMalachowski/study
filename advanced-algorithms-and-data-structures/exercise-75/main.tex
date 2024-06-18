@@ -176,25 +176,23 @@ gdzie przez k oznaczono możliwe wartości dla zmiennej X \cite{OczekiwanaMIMUW}
 
 \chapter*{Rozwiązanie}
 
-Jako $X_i$ oznaczmy zmienną, która przyjmuje wartość 1 jeśli rzut rozpoczyna nowy ciąg i 0 w przeciwnym wypadku. Ponieważ pierwszy rzut rozpoczyna nowy ciąg powtórzeń, a więc $P(X_1=1)=1$ to rozważmy rzuty od 2 do n. 
+Jako $X_i$ oznaczmy zmienną, która przyjmuje wartość 1 jeśli rzut rozpoczyna nowy ciąg i 0 w przeciwnym wypadku. Ponieważ pierwszy rzut rozpoczyna nowy ciąg powtórzeń, a więc $P(X_1=1)=1$. 
+
+Ponieważ kolejne rzuty są niezależne, prawdopodobieństwo rozpoczęcia nowego ciągu wynosi $P(X_i=1)=\frac{1}{2}$ dla każdego kolejnego rzutu. Stąd: \[E(X_i)=P(X_i=1)*1+P(X_i=0)*0=P(X_i=1)=\frac{1}{2}\]. 
 
 Korzystając zatem ze wzoru na wartosć oczekiwaną zmiennej losowej otrzymujemy:
 
 \[
-  E(liczbaCiagow) = \sum_{i=2}^{n}E(X_i)
+  E(X) = \sum_{i=1}^{n}E(X_i)
 \]
 
-Ponieważ kolejne rzuty są niezależne, prawdopodobieństwo rozpoczęcia nowego ciągu wynosi $P(X_i=1)=\frac{1}{2}$ dla każdego rzutu. Stąd: \[E(X_i)=P(X_i=1)*1+P(X_i=0)*0=P(X_i=1)=\frac{1}{2}\]. Teraz obliczmy sumę wszystkich $X_i$ od i = 2:
+Teraz obliczmy sumę wszystkich $X_i$, wiedząc że $P(X_1=1)=1$:
 
 \[
-  E(liczbaCiagow)=\sum_{i=2}^{n}E(X_i) = \sum_{i=2}^{n}\frac{1}{2} = (n-1)*\frac{1}{2} = \frac{n-1}{2}
+  E(X)=\sum_{i=1}^{n}E(X_i) = 1 + \sum_{i=2}^{n}\frac{1}{2} = 1+(n-1)*\frac{1}{2} = 1+ \frac{n-1}{2} = \frac{n+2}{2}
 \]
 
-Ponieważ pierwszy rzut zawsze rozpoczyna nowy ciąg to do tak uzyskanego wzoru dodajemy 1, stąd:
-
-\[
-  E(liczbaCiagow) = 1 + \frac{n-1}{2} = \frac{n+1}{2}
-\]
+Gdzie $E(X)$ to spodziewana liczba ciągów, a $X$ to zbiór zawierający wartości zmiennej $X_i$ dla rzutów od 1 do i.
 
 Zatem odpowiedź to: Spodziewana liczba ciagów powtórzeń wynosi $\frac{n+1}{2}$.
 
