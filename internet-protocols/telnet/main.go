@@ -6,15 +6,27 @@ import (
 	"log"
 	"net"
 	"os"
+	"strings"
 )
 
 const (
-	IAC  = 255
-	DONT = 254
-	DO   = 253
-	WONT = 252
-	WILL = 251
+	IAC          = 255
+	DONT         = 254
+	DO           = 253
+	WONT         = 252
+	WILL         = 251
+	ECHO         = 1
+	SUPPRESS_GA  = 3
+	STATUS       = 5
+	TERM_TYPE    = 24
+	WIN_SIZE     = 31
+	TERM_SPEED   = 32
+	FLOW_CONTROL = 33
+	X_DISPLAY    = 35
+	ENV_OPTION   = 39
 )
+
+var cmdChan chan string
 
 func main() {
 	if len(os.Args) < 3 {
@@ -26,11 +38,15 @@ func main() {
 	remotePort := os.Args[2]
 	address := remoteIP + ":" + remotePort
 
+	cmdChan = make(chan string, 1000)
+
 	conn, err := net.Dial("tcp", address)
 	if err != nil {
 		log.Fatalf("Cannot connect to server: %s", err)
 	}
 	defer conn.Close()
+
+	conn.Write([]byte{IAC, DONT, ECHO})
 
 	fmt.Printf("Connected to %s\n", address)
 
@@ -39,6 +55,7 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		input := scanner.Text() + "\r\n"
+		cmdChan <- input
 		_, err := conn.Write([]byte(input))
 		if err != nil {
 			fmt.Println("Error sending data:", err)
@@ -61,6 +78,11 @@ func handleMessages(conn net.Conn) {
 			os.Exit(0)
 		}
 		output := negotiateOptions(conn, buffer[:n])
+		select {
+		case cmd := <-cmdChan:
+			output = []byte(strings.Replace(string(output), cmd, "", 2))
+		default:
+		}
 		fmt.Print(string(output))
 	}
 }
@@ -77,12 +99,22 @@ func negotiateOptions(conn net.Conn, buf []byte) []byte {
 
 				switch command {
 				case DO:
-					conn.Write([]byte{IAC, WONT, opt})
-				case DONT:
-					conn.Write([]byte{IAC, WONT, opt})
+					switch opt {
+					default:
+						conn.Write([]byte{IAC, WONT, opt})
+					}
 				case WILL:
-					conn.Write([]byte{IAC, DONT, opt})
-				case WONT:
+					switch opt {
+					case SUPPRESS_GA:
+						conn.Write([]byte{IAC, DO, opt})
+					case STATUS:
+						conn.Write([]byte{IAC, DO, opt})
+					case ECHO:
+						conn.Write([]byte{IAC, WONT, ECHO})
+					default:
+						conn.Write([]byte{IAC, DONT, opt})
+					}
+				case DONT, WONT:
 					conn.Write([]byte{IAC, DONT, opt})
 				}
 				i += 3
