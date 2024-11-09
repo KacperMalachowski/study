@@ -7,23 +7,20 @@ import (
 	"net"
 	"os"
 	"strings"
+
+	"golang.org/x/term"
 )
 
 const (
-	IAC          = 255
-	DONT         = 254
-	DO           = 253
-	WONT         = 252
-	WILL         = 251
-	ECHO         = 1
-	SUPPRESS_GA  = 3
-	STATUS       = 5
-	TERM_TYPE    = 24
-	WIN_SIZE     = 31
-	TERM_SPEED   = 32
-	FLOW_CONTROL = 33
-	X_DISPLAY    = 35
-	ENV_OPTION   = 39
+	IAC  = 255
+	DONT = 254
+	DO   = 253
+	WILL = 251
+	WONT = 252
+	SB   = 250
+	SE   = 240
+	NAWS = 31
+	ECHO = 1
 )
 
 var cmdChan chan string
@@ -47,6 +44,7 @@ func main() {
 	defer conn.Close()
 
 	conn.Write([]byte{IAC, DONT, ECHO})
+	conn.Write([]byte{IAC, WILL, NAWS})
 
 	fmt.Printf("Connected to %s\n", address)
 
@@ -100,17 +98,17 @@ func negotiateOptions(conn net.Conn, buf []byte) []byte {
 				switch command {
 				case DO:
 					switch opt {
+					case NAWS:
+						rows, cols := getTerminalSize()
+
+						conn.Write([]byte{IAC, SB, NAWS, byte(cols >> 8), byte(cols & 0xFF), byte(rows >> 8), byte(rows & 0xFF), IAC, SE})
 					default:
 						conn.Write([]byte{IAC, WONT, opt})
 					}
 				case WILL:
 					switch opt {
-					case SUPPRESS_GA:
-						conn.Write([]byte{IAC, DO, opt})
-					case STATUS:
-						conn.Write([]byte{IAC, DO, opt})
 					case ECHO:
-						conn.Write([]byte{IAC, WONT, ECHO})
+						conn.Write([]byte{IAC, DONT, ECHO})
 					default:
 						conn.Write([]byte{IAC, DONT, opt})
 					}
@@ -128,4 +126,10 @@ func negotiateOptions(conn net.Conn, buf []byte) []byte {
 	}
 
 	return output
+}
+
+func getTerminalSize() (int, int) {
+	fd := int(os.Stdin.Fd())
+	width, height, _ := term.GetSize(fd)
+	return height, width
 }
