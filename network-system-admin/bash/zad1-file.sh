@@ -28,6 +28,10 @@ function removeEntry() {
   read phone
 
   entry="$name $surname $phone"
+  if ! [ -f /path/to/file ]; then
+    return
+  fi
+
   if grep -qF "$entry" "$file"; then
     echo "$(grep -F "$entry" "$file")"
     echo "Usunac wpis? (t/n)"
@@ -49,6 +53,10 @@ function editEntry() {
   read phone
 
   entry="$name $surname $phone"
+  if ! [ -f /path/to/file ]; then
+    echo "Nie znaleziono"
+    return
+  fi
   if grep -qF "$entry" "$file"; then
     echo "$(grep -F "$entry" "$file")"
 
