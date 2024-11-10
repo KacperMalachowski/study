@@ -22,7 +22,7 @@ wind=$(echo $weather | grep -oP '<span class="restParamValue">\K[^"]+(?=<span cl
 qnh=$(echo $weather | grep -oP '<span class="restParamLabel">Ciśnienie atmosferyczne</span>\s*<span class="restParamValue">\K[^"]+(?=</span>)' | head -n 1)
 humidity=$(echo $weather | grep -oP '<span class="restParamLabel">Wilgotność</span>\s*<span class="restParamValue">\K[^"]+(?=</span>)' | head -n 1)
 
-curl -s -o 1.png "$iconURL"
+curl -s -o 1.svg "$iconURL"
 echo $cityName
 echo "$temp°C"
 echo $iconAlt
