@@ -4,37 +4,10 @@
 	 viewBox="0 0 40 40" style="enable-background:new 0 0 40 40;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#FFD200;}
-	.st1{fill:#1E1E1E;}
 </style>
 <g>
-	<g>
-		<path class="st0" d="M27.8,19.9c0,4.2-3.4,7.6-7.6,7.6s-7.6-3.4-7.6-7.6s3.4-7.6,7.6-7.6S27.8,15.7,27.8,19.9"/>
-	</g>
-	<g>
-		<rect x="19.1" y="2.6" class="st1" width="1.7" height="5.5"/>
-	</g>
-	<g>
-		<rect x="27.6" y="8.8" transform="matrix(0.7071 -0.7071 0.7071 0.7071 2.0317 24.2828)" class="st1" width="5.5" height="1.7"/>
-	</g>
-	<g>
-		<rect x="31.8" y="19.1" class="st1" width="5.5" height="1.7"/>
-	</g>
-	<g>
-		
-			<rect x="29.4" y="27.5" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -12.5616 30.3155)" class="st1" width="1.7" height="5.5"/>
-	</g>
-	<g>
-		<rect x="19.1" y="31.8" class="st1" width="1.7" height="5.5"/>
-	</g>
-	<g>
-		<rect x="8.8" y="6.9" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -4.0153 9.6841)" class="st1" width="1.7" height="5.5"/>
-	</g>
-	<g>
-		<rect x="2.6" y="19.1" class="st1" width="5.5" height="1.7"/>
-	</g>
-	<g>
-		
-			<rect x="6.9" y="29.5" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -18.6142 15.7312)" class="st1" width="5.5" height="1.7"/>
-	</g>
+	<path class="st0" d="M29.7,24.1c-7.4,0-13.4-6-13.4-13.4c0-1.5,0.3-2.9,0.7-4.3c-1.4,0.5-2.8,1.2-3.9,2.1c-0.3,0.2-0.6,0.4-0.8,0.7
+		C9.6,11.7,8,15.2,8,19.1c0,7.4,6,13.4,13.4,13.4c4,0,7.5-1.7,9.9-4.5c0.2-0.3,0.5-0.5,0.7-0.8c0.9-1.1,1.6-2.4,2-3.8
+		C32.6,23.9,31.2,24.1,29.7,24.1z"/>
 </g>
 </svg>

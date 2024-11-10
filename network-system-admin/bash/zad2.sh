@@ -14,7 +14,7 @@
 cityName="Dąbrowa Górnicza"
 weatherURL="/prognoza-pogody/dabrowa-gornicza-281697"
 weather=$(curl -s "https://pogoda.onet.pl$weatherURL")
-temp=$(echo $weather | grep -oP '<div class="temp">\K[0-9]+(?=<span class="deg">)')
+temp=$(echo $weather | grep -oP '<div class="temp">\K[-0-9]+(?=<span class="deg">)')
 iconURL=$(echo $weather | grep -oP '<span class="iconHolder">\s*<img[^>]*src="\K[^"]+' | head -n 1)
 iconAlt=$(echo $weather | grep -oP '<span class="iconHolder">\s*<img[^>]*alt="\K[^"]+' | head -n 1)
 rain=$(echo $weather | grep -oP '<span class="restParamValue">\K[^"]+(?=</span>)' | head -n 1)
