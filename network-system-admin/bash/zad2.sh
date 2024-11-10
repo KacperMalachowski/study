@@ -1,16 +1,18 @@
 #!/bin/bash
 
 # Function to fetch correct city name and weather URL
-function searchCity() {
-  city=$1
+# function searchCity() {
+#   city=$1
 
-  cities=$(curl -s "https://pogoda.onet.pl/ajax/search?type=&query=$city")
-}
+#   cities=$(curl -s "https://pogoda.onet.pl/ajax/search?type=&query=$city")
+# }
 
 
-searchCity "warszawa"
-cityName=$(echo $cities | jq -r '.suggestions[0].value')
-weatherURL=$(echo $cities | jq -r '.suggestions[0].data.url')
+# searchCity "warszawa"
+# cityName=$(echo $cities | jq -r '.suggestions[0].value')
+# weatherURL=$(echo $cities | jq -r '.suggestions[0].data.url')
+cityName="Dąbrowa Górnicza"
+weatherURL="/prognoza-pogody/dabrowa-gornicza-281697"
 weather=$(curl -s "https://pogoda.onet.pl$weatherURL")
 temp=$(echo $weather | grep -oP '<div class="temp">\K[0-9]+(?=<span class="deg">)')
 iconURL=$(echo $weather | grep -oP '<span class="iconHolder">\s*<img[^>]*src="\K[^"]+' | head -n 1)
