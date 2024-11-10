@@ -1,6 +1,6 @@
 #!/bin/bash
 
-entries=()
+file="phonebook.txt"
 
 function addEntry() {
   echo $'Podaj imie:'
@@ -10,7 +10,7 @@ function addEntry() {
   echo $'Podaj numer telefonu:'
   read phone
 
-  entries+=("$name $surname $phone")
+  echo "$name $surname $phone" >> $file
 
   echo "Dodać kolejny wpis? (t/n)"
   read answer
@@ -27,19 +27,17 @@ function removeEntry() {
   echo $'Podaj numer telefonu:'
   read phone
 
-  for i in "${!entries[@]}"; do
-    if [[ "${entries[$i]}" == "$name $surname $phone" ]]; then
-      echo "${entries[$i]}"
-      echo "Usunac wpis? (t/n)"
-      read answer
+  entry="$name $surname $phone"
+  if grep -qF "$entry" "$file"; then
+    echo "$(grep -F "$entry" "$file")"
+    echo "Usunac wpis? (t/n)"
+    read answer
 
-      if [ $answer == "t" ]; then
-        unset entries[$i]
-        echo "Usunieto"
-      fi
-      break
+    if [ $answer == "t" ]; then
+      grep -vF "$entry" "$file" > temp && mv temp "$file"
     fi
-  done
+    echo "Usunieto"
+  fi
 }
 
 function editEntry() {
@@ -50,17 +48,14 @@ function editEntry() {
   echo $'Podaj numer telefonu:'
   read phone
 
-  for i in "${!entries[@]}"; do
-    if [[ "${entries[$i]}" == "$name $surname $phone" ]]; then
-      echo "${entries[$i]}"
+  entry="$name $surname $phone"
+  if grep -qF "$entry" "$file"; then
+    echo "$(grep -F "$entry" "$file")"
 
-      echo "Edytować wpis? (t/n)"
-      read answer
+    echo "Edytować wpis? (t/n)"
+    read answer
 
-      if [ $answer == "n" ]; then
-        break
-      fi
-
+    if [ $answer == "t" ]; then
       echo "Podaj imie:"
       read newName
       echo "Podaj nazwisko:"
@@ -68,11 +63,10 @@ function editEntry() {
       echo "Podaj numer telefonu:"
       read newPhone
 
-      entries[$i]="$newName $newSurname $newPhone"
+      sed -i "s/$entry/$newName $newSurname $newPhone/g" "$file"
       echo "Zmieniono"
-      break
     fi
-  done
+  fi
 }
 
 function findEntry() {
@@ -80,11 +74,7 @@ function findEntry() {
   read search
 
   echo "Wyniki wyszukiwania:"
-  for i in "${!entries[@]}"; do
-    if [[ "${entries[$i]}" == *"$search"* ]]; then
-      echo "${entries[$i]}"
-    fi
-  done
+  grep -F "$search" "$file"
 
   echo "Wyszukać ponownie? (t/n)"
   read answer
