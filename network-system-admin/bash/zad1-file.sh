@@ -28,7 +28,7 @@ function removeEntry() {
   read phone
 
   entry="$name $surname $phone"
-  if ! [ -f /path/to/file ]; then
+  if ! [ -f $file ]; then
     return
   fi
 
@@ -38,7 +38,7 @@ function removeEntry() {
     read answer
 
     if [ $answer == "t" ]; then
-      grep -vF "$entry" "$file" > temp && mv temp "$file"
+      sed -i "/$entry/d" "$file"
     fi
     echo "Usunieto"
   fi
@@ -53,7 +53,7 @@ function editEntry() {
   read phone
 
   entry="$name $surname $phone"
-  if ! [ -f /path/to/file ]; then
+  if ! [ -f $file ]; then
     echo "Nie znaleziono"
     return
   fi
