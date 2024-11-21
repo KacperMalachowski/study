@@ -9,32 +9,35 @@
   <body>
 	  
     <div id="app">
-		<header class="row">	
-			<h1 class="col" v-text="sitename"></h1>
-			<div class="col-2 end-0"><span class="material-symbols-outlined">
-				shopping_cart
-				</span>{{ cartSize }}</div>
-		</header>	
-		
-		<main>
-		  <div class="row product">
+      <header class="row">	
+        <h1 class="col" v-text="sitename"></h1>
+        <div class="col-2 end-0" @click="">
+          <span class="material-symbols-outlined">
+          shopping_cart
+          </span>{{ cartSize }}</div>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Zamów</button>
+      </header>	
+      
+      <main>
+        <div class="row product">
 
-			<div class="col">
-			  <figure>
-				<img v-bind:src="product.image">	
-			  </figure>
-			</div>
+          <div class="col">
+            <figure>
+            <img v-bind:src="product.image">	
+            </figure>
+          </div>
 
-			<div class="col col-expand">	
-			  <h1 v-text="product.title"></h1>	
-			  <p v-html="product.description"></p>	
-			  <p class="price">{{ product.price | formatPrice }}</p>
-				<button v-on:click="addToCart(product.id)" :disabled="product.inStore <= 0">Dodaj do koszyka</button>	
-			</div>
+          <div class="col col-expand">	
+            <h1 v-text="product.title"></h1>	
+            <p v-html="product.description"></p>	
+            <p class="price">{{ product.price | formatPrice }}</p>
+            <p>In store {{ product.inStore }}</p>
+            <button v-on:click="addToCart(product.id)" :disabled="product.inStore <= 0">Dodaj do koszyka</button>	
+          </div>
+        </div>
 
-		  </div>
-		</main>
-
+        
+      </main>
     </div>
 
     <script type="text/javascript">
@@ -51,6 +54,7 @@
 					inStore: 4,
 					image: "assets/images/potato.jpg"
 				},
+        showOrderForm: false,
 				cart: []
 		  },
 			methods: {
@@ -58,7 +62,8 @@
 					if (this.product.inStore < 1) return
 					this.product.inStore--;
 					this.cart.push(id)
-				}
+				},
+        
 			},
 			computed: {
 				cartSize: function() {
