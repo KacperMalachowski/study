@@ -4,10 +4,15 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"os"
+	"path/filepath"
 	"strings"
+	"unicode/utf8"
+
+	"golang.org/x/text/encoding/charmap"
 )
 
 type User struct {
@@ -63,11 +68,19 @@ type options struct {
 }
 
 type FTPServer struct {
-	config *Config
+	config           *Config
+	dataType         string
+	dataTransferMode string
+	fileStructure    string
 }
 
 func NewFTPServer(config *Config) *FTPServer {
-	return &FTPServer{config: config}
+	return &FTPServer{
+		config:           config,
+		dataType:         "A",
+		dataTransferMode: "S",
+		fileStructure:    "F",
+	}
 }
 
 func (s *FTPServer) ListenAndServe() error {
@@ -97,7 +110,7 @@ func (s *FTPServer) handleConn(conn net.Conn) {
 		return
 	}
 
-	var currentWorkingDirectory = s.config.Path
+	currentWorkingDirectory := s.config.Path
 	var data net.Conn
 	for {
 		buf := make([]byte, 1024)
@@ -121,26 +134,27 @@ func (s *FTPServer) handleConn(conn net.Conn) {
 			newWorkingDirectory := arg
 
 			if newWorkingDirectory == ".." {
-				newWorkingDirectoryParts := strings.Split(currentWorkingDirectory, "/")
-				newWorkingDirectoryParts = newWorkingDirectoryParts[:len(newWorkingDirectoryParts)-1]
-				newWorkingDirectory = strings.Join(newWorkingDirectoryParts, "/")
+				newWorkingDirectory = strings.Join(strings.Split(currentWorkingDirectory, "/")[:len(strings.Split(currentWorkingDirectory, "/"))-1], "/")
+			} else if newWorkingDirectory[0] == '/' {
+				newWorkingDirectory = newWorkingDirectory[1:]
+			} else {
+				newWorkingDirectory = currentWorkingDirectory + "/" + newWorkingDirectory
 			}
 
-			// Check if the new working directory is a valid directory
-			if _, err := os.Stat(newWorkingDirectory); err != nil {
+			if _, err := os.Stat(newWorkingDirectory); os.IsNotExist(err) {
 				if err := s.sendResponse(conn, 550, "Directory not found"); err != nil {
+					log.Printf("failed to send response: %v", err)
+					return
+				}
+			} else {
+				currentWorkingDirectory = filepath.Clean(newWorkingDirectory)
+				if err := s.sendResponse(conn, 250, "Directory changed"); err != nil {
 					log.Printf("failed to send response: %v", err)
 					return
 				}
 			}
 
-			// Check if the new working directory is under the root directory
-			if !strings.HasPrefix(newWorkingDirectory, s.config.Path) {
-				if err := s.sendResponse(conn, 550, "Directory not found"); err != nil {
-					log.Printf("failed to send response: %v", err)
-					return
-				}
-			}
+			log.Printf("Current working directory: %s", currentWorkingDirectory)
 		case "LIST":
 			if data == nil {
 				if err := s.sendResponse(conn, 425, "Use PASV first"); err != nil {
@@ -161,8 +175,9 @@ func (s *FTPServer) handleConn(conn net.Conn) {
 			}
 
 			for _, file := range files {
-				if _, err := data.Write([]byte(file.Name() + "\r\n")); err != nil {
-					log.Printf("failed to write to data connection: %v", err)
+				err := s.sendData(data, []byte(file.Name()+"\r\n"))
+				if err != nil {
+					log.Printf("failed to send data: %v", err)
 					return
 				}
 			}
@@ -180,7 +195,7 @@ func (s *FTPServer) handleConn(conn net.Conn) {
 				return
 			}
 
-			ip := strings.Replace(strings.Split(conn.LocalAddr().String(), ":")[0], ".", ",", -1)
+			ip := strings.Replace(strings.Split(s.config.Addr, ":")[0], ".", ",", -1)
 			p1 := port / 256
 			p2 := port % 256
 
@@ -194,6 +209,43 @@ func (s *FTPServer) handleConn(conn net.Conn) {
 				log.Printf("failed to accept data connection: %v", err)
 				return
 			}
+		case "TYPE":
+			switch arg {
+			case "A":
+				s.dataType = "A"
+				if err := s.sendResponse(conn, 200, "Type set to A"); err != nil {
+					log.Printf("failed to send response: %v", err)
+					return
+				}
+			case "I":
+				s.dataType = "I"
+				if err := s.sendResponse(conn, 200, "Type set to I"); err != nil {
+					log.Printf("failed to send response: %v", err)
+					return
+				}
+			}
+		case "MODE":
+			if arg != "S" {
+				if err := s.sendResponse(conn, 504, "Only S mode is supported"); err != nil {
+					log.Printf("failed to send response: %v", err)
+					return
+				}
+			}
+			if err := s.sendResponse(conn, 200, "Mode set to S"); err != nil {
+				log.Printf("failed to send response: %v", err)
+				return
+			}
+		case "STRU":
+			if arg != "F" {
+				if err := s.sendResponse(conn, 504, "Only F structure is supported"); err != nil {
+					log.Printf("failed to send response: %v", err)
+					return
+				}
+			}
+			if err := s.sendResponse(conn, 200, "Structure set to F"); err != nil {
+				log.Printf("failed to send response: %v", err)
+				return
+			}
 		case "PWD":
 			if err := s.sendResponse(conn, 257, fmt.Sprintf("\"%s\" is the current directory", currentWorkingDirectory)); err != nil {
 				log.Printf("failed to send response: %v", err)
@@ -205,7 +257,10 @@ func (s *FTPServer) handleConn(conn net.Conn) {
 				return
 			}
 		default:
-			conn.Write([]byte("502 Command not implemented.\r\n"))
+			if err := s.sendResponse(conn, 502, "Command not implemented"); err != nil {
+				log.Printf("failed to send response: %v", err)
+				return
+			}
 		}
 	}
 }
@@ -275,6 +330,61 @@ func (s *FTPServer) openDataConnection() (net.Listener, int, error) {
 	}
 
 	return nil, -1, fmt.Errorf("no available ports")
+}
+
+func (s *FTPServer) sendData(conn net.Conn, data []byte) error {
+	var formattedData []byte
+	switch s.dataType {
+	case "A":
+		formattedData = append(data, []byte("\r\n")...)
+	case "I":
+		formattedData = data
+	case "E":
+		encoder := charmap.CodePage037.NewEncoder()
+		encodedData, err := encoder.Bytes(data)
+		if err != nil {
+			return fmt.Errorf("failed to encode data: %w", err)
+		}
+
+		formattedData = encodedData
+	case "U":
+		for _, r := range string(data) {
+			utf8.AppendRune(formattedData, r)
+		}
+	default:
+		return fmt.Errorf("unsupported data type: %s", s.dataType)
+	}
+
+	if _, err := conn.Write(formattedData); err != nil {
+		return fmt.Errorf("failed to write data: %w", err)
+	}
+
+	return nil
+}
+
+func (s *FTPServer) receiveFile(conn net.Conn, path string) error {
+	file, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("failed to create file: %w", err)
+	}
+	defer file.Close()
+
+	buf := make([]byte, 1024)
+	for {
+		n, err := conn.Read(buf)
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return fmt.Errorf("failed to read from connection: %w", err)
+		}
+
+		if _, err := file.Write(buf[:n]); err != nil {
+			return fmt.Errorf("failed to write to file: %w", err)
+		}
+	}
+
+	return nil
 }
 
 func (s *FTPServer) sendResponse(conn net.Conn, code int, message string) error {
