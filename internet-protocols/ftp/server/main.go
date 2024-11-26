@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"io/fs"
 	"log"
 	"net"
 	"os"
@@ -225,15 +226,22 @@ func (s *FTPServer) handleConn(conn net.Conn) {
 				}
 			}
 		case "MODE":
-			if arg != "S" {
-				if err := s.sendResponse(conn, 504, "Only S mode is supported"); err != nil {
+			switch arg {
+			case "S":
+				if err := s.sendResponse(conn, 200, "Mode set to S"); err != nil {
 					log.Printf("failed to send response: %v", err)
 					return
 				}
-			}
-			if err := s.sendResponse(conn, 200, "Mode set to S"); err != nil {
-				log.Printf("failed to send response: %v", err)
-				return
+			case "A":
+				if err := s.sendResponse(conn, 200, "Mode set to A"); err != nil {
+					log.Printf("failed to send response: %v", err)
+					return
+				}
+			default:
+				if err := s.sendResponse(conn, 504, "Only S and A modes are supported"); err != nil {
+					log.Printf("failed to send response: %v", err)
+					return
+				}
 			}
 		case "STRU":
 			if arg != "F" {
@@ -417,19 +425,23 @@ func gatherOptions(opts *options) {
 }
 
 func main() {
-	o := options{}
-	gatherOptions(&o)
-	flag.Parse()
+	fSys := os.DirFS("./tmp")
 
-	config, err := loadConfig(o.configPath)
-	if err != nil {
-		log.Fatalf("failed to load config: %v", err)
-	}
+	items, _ := fs.ReadDir(fSys, "/tmp")
+	fmt.Println(items)
+	// o := options{}
+	// gatherOptions(&o)
+	// flag.Parse()
 
-	server := NewFTPServer(config)
+	// config, err := loadConfig(o.configPath)
+	// if err != nil {
+	// 	log.Fatalf("failed to load config: %v", err)
+	// }
 
-	if err := server.ListenAndServe(); err != nil {
-		log.Fatalf("failed to start server: %v", err)
-	}
+	// server := NewFTPServer(config)
+
+	// if err := server.ListenAndServe(); err != nil {
+	// 	log.Fatalf("failed to start server: %v", err)
+	// }
 
 }
