@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/fs"
 	"log"
 	"net"
 	"os"
@@ -19,6 +18,7 @@ import (
 type User struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
+	HomeDir  string `json:"home_dir"`
 }
 
 type Config struct {
@@ -113,6 +113,7 @@ func (s *FTPServer) handleConn(conn net.Conn) {
 
 	currentWorkingDirectory := s.config.Path
 	var data net.Conn
+	var dataListener net.Listener
 	for {
 		buf := make([]byte, 1024)
 		n, err := conn.Read(buf)
@@ -169,34 +170,35 @@ func (s *FTPServer) handleConn(conn net.Conn) {
 				return
 			}
 
-			files, err := os.ReadDir(currentWorkingDirectory)
+			err := filepath.Walk(currentWorkingDirectory, func(path string, info os.FileInfo, err error) error {
+				if err != nil {
+					return err
+				}
+
+				formattedInfo := fmt.Sprintf("%s %d %s %s", info.Mode(), info.Size(), info.ModTime().Format("Jan 2 15:04"), info.Name())
+				err = s.sendData(data, []byte(formattedInfo))
+				return nil
+			})
 			if err != nil {
-				log.Printf("failed to read directory: %v", err)
+				log.Printf("failed to walk directory: %v", err)
 				return
 			}
-
-			for _, file := range files {
-				err := s.sendData(data, []byte(file.Name()+"\r\n"))
-				if err != nil {
-					log.Printf("failed to send data: %v", err)
-					return
-				}
-			}
+			data.Close()
+			dataListener.Close()
 
 			if err := s.sendResponse(conn, 226, "Directory send OK"); err != nil {
 				log.Printf("failed to send response: %v", err)
 				return
 			}
 
-			data.Close()
 		case "PASV":
-			dataConn, port, err := s.openDataConnection()
+			dataConn, port, err := s.openDataConnection(conn)
 			if err != nil {
 				log.Printf("failed to open data connection: %v", err)
 				return
 			}
 
-			ip := strings.Replace(strings.Split(s.config.Addr, ":")[0], ".", ",", -1)
+			ip := strings.Replace(strings.Split(conn.LocalAddr().String(), ":")[0], ".", ",", -1)
 			p1 := port / 256
 			p2 := port % 256
 
@@ -210,6 +212,7 @@ func (s *FTPServer) handleConn(conn net.Conn) {
 				log.Printf("failed to accept data connection: %v", err)
 				return
 			}
+			dataListener = dataConn
 		case "TYPE":
 			switch arg {
 			case "A":
@@ -273,6 +276,38 @@ func (s *FTPServer) handleConn(conn net.Conn) {
 	}
 }
 
+// changeDirectory updates the current working directory based on the given path.
+// It returns the new working directory and an error if the path is invalid.
+// It prevents directory traversal attacks by ensuring the new path is a subdirectory of the user homedir.
+// It support relative and absolute paths.
+func (s *FTPServer) changeDirectory(conn net.Conn, user User, path string) (string, error) {
+	// If the path is empty, return the user's home directory.
+	if path == "" {
+		return user.HomeDir, nil
+	}
+
+	// If the path is absolute, return it prepended to home dir.
+	if path[0] == '/' {
+		return fmt.Sprintf("%s%s", user.HomeDir, path), nil
+	}
+
+	// If the path is relative, append it to the current working directory.
+	newPath := filepath.Join(user.HomeDir, path)
+
+	// Check if the new path is a subdirectory of the user's home directory.
+	if !strings.HasPrefix(newPath, user.HomeDir) {
+		err := s.sendResponse(conn, 550, "Permission denied")
+		if err != nil {
+			return "", fmt.Errorf("failed to send response: %w", err)
+		}
+		return "", fmt.Errorf("permission denied")
+	}
+
+	return newPath, nil
+}
+
+// handleUserCommand handles the USER command.
+// It checks if the user is allowed to log in and sends the appropriate response.
 func (s *FTPServer) handleUserCommand(conn net.Conn, arg string) error {
 	fmt.Println(arg, arg == "anonymous")
 	if s.config.AllowAnonymous && arg == "anonymous" {
@@ -323,9 +358,9 @@ func (s *FTPServer) handleUserCommand(conn net.Conn, arg string) error {
 	return nil
 }
 
-func (s *FTPServer) openDataConnection() (net.Listener, int, error) {
+func (s *FTPServer) openDataConnection(conn net.Conn) (net.Listener, int, error) {
 	for port := s.config.MinDataPort; port <= s.config.MaxDataPort; port++ {
-		addrWithoutPort := strings.Split(s.config.Addr, ":")[0]
+		addrWithoutPort := strings.Split(conn.LocalAddr().String(), ":")[0]
 		addr := fmt.Sprintf("%s:%d", addrWithoutPort, port)
 
 		listener, err := net.Listen("tcp", addr)
@@ -363,6 +398,7 @@ func (s *FTPServer) sendData(conn net.Conn, data []byte) error {
 		return fmt.Errorf("unsupported data type: %s", s.dataType)
 	}
 
+	log.Printf("sending data: %s", formattedData)
 	if _, err := conn.Write(formattedData); err != nil {
 		return fmt.Errorf("failed to write data: %w", err)
 	}
@@ -425,23 +461,19 @@ func gatherOptions(opts *options) {
 }
 
 func main() {
-	fSys := os.DirFS("./tmp")
+	o := options{}
+	gatherOptions(&o)
+	flag.Parse()
 
-	items, _ := fs.ReadDir(fSys, "/tmp")
-	fmt.Println(items)
-	// o := options{}
-	// gatherOptions(&o)
-	// flag.Parse()
+	config, err := loadConfig(o.configPath)
+	if err != nil {
+		log.Fatalf("failed to load config: %v", err)
+	}
 
-	// config, err := loadConfig(o.configPath)
-	// if err != nil {
-	// 	log.Fatalf("failed to load config: %v", err)
-	// }
+	server := NewFTPServer(config)
 
-	// server := NewFTPServer(config)
-
-	// if err := server.ListenAndServe(); err != nil {
-	// 	log.Fatalf("failed to start server: %v", err)
-	// }
+	if err := server.ListenAndServe(); err != nil {
+		log.Fatalf("failed to start server: %v", err)
+	}
 
 }
