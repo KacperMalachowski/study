@@ -3,6 +3,8 @@ package ftp
 import (
 	"errors"
 	"fmt"
+	"io/fs"
+	"log"
 	"net"
 	"os"
 	"path/filepath"
@@ -18,26 +20,29 @@ var (
 )
 
 type Session struct {
-	ctrlConn   net.Conn
-	dataServer net.Listener
-	user       config.User
+	ctrlConn      net.Conn
+	dataServer    net.Listener
+	user          *config.User
+	serverRootDir string
 
 	// Current directory of the session relative to the user's home directory
 	currentDir string
 }
 
-func NewAuthenticatedSession(ctrlConn net.Conn, user config.User) *Session {
+func NewAuthenticatedSession(ctrlConn net.Conn, user *config.User, serverRootDir string) *Session {
 	return &Session{
-		ctrlConn: ctrlConn,
-		user:     user,
+		ctrlConn:      ctrlConn,
+		user:          user,
+		serverRootDir: serverRootDir,
 
 		currentDir: "/",
 	}
 }
 
-func NewSession(ctrlConn net.Conn) *Session {
+func NewSession(ctrlConn net.Conn, serverRootDir string) *Session {
 	return &Session{
-		ctrlConn: ctrlConn,
+		ctrlConn:      ctrlConn,
+		serverRootDir: serverRootDir,
 
 		currentDir: "/",
 	}
@@ -48,6 +53,11 @@ func (s *Session) Close() {
 	if s.dataServer != nil {
 		s.dataServer.Close()
 	}
+}
+
+func (s *Session) IsAuthenticated() bool {
+	log.Printf("user: %v", s.user)
+	return s.user.Username != "" && s.user.HomeDir != ""
 }
 
 func (s *Session) GetCurrentDirectory() string {
@@ -91,6 +101,16 @@ func (s *Session) ChangeDirectory(dir string) error {
 	return nil
 }
 
+func (s *Session) ListDirectory() ([]fs.DirEntry, error) {
+	dir := s.getRealPath(s.currentDir)
+	files, err := os.ReadDir(dir)
+	if err != nil {
+		return nil, fmt.Errorf("error reading directory: %s", err)
+	}
+
+	return files, nil
+}
+
 func (s *Session) getRealPath(path string) string {
-	return filepath.Join(s.user.HomeDir, path)
+	return filepath.Join(s.serverRootDir, s.user.HomeDir, path)
 }

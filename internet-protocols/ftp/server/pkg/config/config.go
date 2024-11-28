@@ -11,7 +11,7 @@ import (
 type User struct {
 	Username string `yaml:"username" mapstructure:"username"`
 	Password string `yaml:"password" mapstructure:"password"`
-	HomeDir  string `yaml:"home_dir" mapstructure:"home_dir"`
+	HomeDir  string `yaml:"homedir" mapstructure:"homedir"`
 }
 
 func (u *User) String() string {
@@ -50,6 +50,16 @@ func (u *Users) Set(value string) error {
 
 func (u *Users) Type() string {
 	return "user"
+}
+
+func (u *Users) FindByUsername(username string) (*User, bool) {
+	for _, user := range *u {
+		if user.Username == username {
+			return &user, true
+		}
+	}
+
+	return nil, false
 }
 
 func UserStringDecodeHook() mapstructure.DecodeHookFuncType {

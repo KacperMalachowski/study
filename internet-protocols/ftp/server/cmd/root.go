@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/KacperMalachowski/study/internet-protocols/ftp/server/pkg/config"
+	"github.com/KacperMalachowski/study/internet-protocols/ftp/server/pkg/ftp"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -22,6 +23,12 @@ var rootCmd = &cobra.Command{
 		if err := configuration.Validate(); err != nil {
 			log.Fatalf("Error validating configuration: %s", err)
 		}
+
+		server := ftp.NewServer(configuration.Address, configuration.Port, configuration.Users, configuration.MinPassivePort, configuration.MaxPassivePort, configuration.AllowAnonymous, configuration.RootDir)
+		if err := server.ListenAndServe(); err != nil {
+			log.Fatalf("Error starting server: %s", err)
+		}
+		defer server.Close()
 	},
 }
 

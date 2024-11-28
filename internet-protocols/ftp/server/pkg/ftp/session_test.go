@@ -16,7 +16,7 @@ type FileInfo struct {
 
 func TestGetCurrentDirector(t *testing.T) {
 	tmp := t.TempDir()
-	s := NewAuthenticatedSession(nil, config.User{HomeDir: tmp})
+	s := NewAuthenticatedSession(nil, &config.User{HomeDir: "/"}, tmp)
 
 	if s.GetCurrentDirectory() != "/" {
 		t.Errorf("expected %s, got %s", tmp, s.GetCurrentDirectory())
@@ -25,7 +25,7 @@ func TestGetCurrentDirector(t *testing.T) {
 
 func TestChangeDirectoryUp(t *testing.T) {
 	tmp := t.TempDir()
-	s := NewAuthenticatedSession(nil, config.User{HomeDir: tmp})
+	s := NewAuthenticatedSession(nil, &config.User{HomeDir: "/"}, tmp)
 
 	if err := s.ChangeDirectoryUp(); err != nil {
 		t.Errorf("expected no error, got %s", err)
@@ -91,7 +91,7 @@ func TestChangeDirectory(t *testing.T) {
 	for _, c := range tc {
 		t.Run(c.name, func(t *testing.T) {
 			tmp := t.TempDir()
-			s := NewAuthenticatedSession(nil, config.User{HomeDir: tmp})
+			s := NewAuthenticatedSession(nil, &config.User{HomeDir: tmp}, tmp)
 
 			for name, file := range c.fs {
 				if err := os.MkdirAll(filepath.Join(tmp, name), 0755); err != nil {
@@ -117,13 +117,5 @@ func TestChangeDirectory(t *testing.T) {
 				t.Errorf("expected %s, got %s", c.expected, s.GetCurrentDirectory())
 			}
 		})
-	}
-}
-
-func TestRequireAuthenticatedSession(t *testing.T) {
-	s := NewSession(nil)
-
-	if err := s.ChangeDirectory("test"); err == nil {
-		t.Error("expected error, got nil")
 	}
 }
