@@ -98,6 +98,8 @@ func (s *Session) ChangeDirectory(dir string) error {
 
 	s.currentDir = newDirectory
 
+	log.Printf("Changed directory to %s", s.currentDir)
+
 	return nil
 }
 
@@ -111,6 +113,37 @@ func (s *Session) ListDirectory() ([]fs.DirEntry, error) {
 	return files, nil
 }
 
+func (s *Session) RetrieveFile(file string) (fs.File, error) {
+	return os.Open(s.getRealPath(file))
+}
+
+func (s *Session) StoreFile(file string, data []byte) error {
+	return os.WriteFile(s.getRealPath(file), data, 0644)
+}
+
+func (s *Session) DeleteFile(file string) error {
+	return os.Remove(s.getRealPath(file))
+}
+
+func (s *Session) MakeDirectory(dir string) error {
+	return os.Mkdir(s.getRealPath(dir), 0755)
+}
+
+func (s *Session) RemoveDirectory(dir string) error {
+	return os.Remove(s.getRealPath(dir))
+}
+
 func (s *Session) getRealPath(path string) string {
+	if strings.HasPrefix(path, "/public") {
+		return filepath.Join(s.serverRootDir, path)
+	}
+
+	if strings.HasPrefix(s.currentDir, "/public") {
+		return filepath.Join(s.serverRootDir, s.currentDir, path)
+	}
+
+	if !strings.HasPrefix(path, "/") {
+		path = filepath.Join(s.currentDir, path)
+	}
 	return filepath.Join(s.serverRootDir, s.user.HomeDir, path)
 }

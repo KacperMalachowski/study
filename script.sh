@@ -22,7 +22,7 @@ done < <(find $path -type f -name "*.$ext" -print0)
 
 # Save the content of all the files in a single file, each file separated by a newline and a comment with path
 for file in "${files[@]}"; do
-    echo "# $file" >> $out
+    echo "// $file" >> $out
     cat $file >> $out
     echo "" >> $out
 done

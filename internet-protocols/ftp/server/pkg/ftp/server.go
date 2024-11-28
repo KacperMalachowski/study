@@ -2,6 +2,8 @@ package ftp
 
 import (
 	"fmt"
+	"io"
+	"io/fs"
 	"log"
 	"net"
 	"strconv"
@@ -123,20 +125,28 @@ func (s *Server) handleCommand(session *Session, command string) {
 		s.sendResponse(session, 200, "Type set")
 	case "PWD":
 		s.handlePwdCommand(session)
-	// case "CWD":
-	// 	s.handleCwdCommand(session, args)
+	case "CWD":
+		s.handleCwdCommand(session, args)
 	case "PASV":
 		s.handlePasvCommand(session)
 	case "LIST":
 		s.handleListCommand(session, args)
 	case "EPSV":
 		s.handleEpsvCommand(session)
-	// case "RETR":
-	// 	s.handleRetrCommand(session, args)
-	// case "STOR":
-	// 	s.handleStorCommand(session, args)
-	// case "QUIT":
-	// 	s.handleQuitCommand(session)
+	case "CDUP":
+		s.handleCwdCommand(session, "..")
+	case "RETR":
+		s.handleRetrCommand(session, args)
+	case "STOR":
+		s.handleStorCommand(session, args)
+	case "MKD":
+		s.handleMkdCommand(session, args)
+	case "RMD":
+		s.handleRmdCommand(session, args)
+	case "DELE":
+		s.handleDeleCommand(session, args)
+	case "QUIT":
+		s.handleQuitCommand(session)
 	default:
 		s.sendResponse(session, 502, "Command not implemented")
 	}
@@ -146,7 +156,7 @@ func (s *Server) handleUserCommand(session *Session, username string) {
 	if s.allowAnonymous && username == "anonymous" {
 		session.user = &config.User{
 			Username: "anonymous",
-			HomeDir:  "/",
+			HomeDir:  "/public",
 		}
 
 		s.sendResponse(session, 230, "User logged in, proceed")
@@ -299,6 +309,9 @@ func (s *Server) handleListCommand(session *Session, _ string) {
 		if file.IsDir() {
 			prefix = "drwxr-xr-x"
 		}
+		if file.Type() == fs.ModeSymlink {
+			prefix = "lrwxr-xr-x"
+		}
 
 		infor, err := file.Info()
 		if err != nil {
@@ -312,4 +325,147 @@ func (s *Server) handleListCommand(session *Session, _ string) {
 	}
 
 	s.sendResponse(session, 226, "Directory send OK")
+}
+
+func (s *Server) handleCwdCommand(session *Session, dir string) {
+	if !session.IsAuthenticated() {
+		s.sendResponse(session, 530, "Not logged in")
+		return
+	}
+
+	if err := session.ChangeDirectory(dir); err != nil {
+		if err == ErrDirectoryNotFound {
+			s.sendResponse(session, 550, "Directory not found")
+			return
+		}
+
+		if err == ErrNotDirectory {
+			s.sendResponse(session, 550, "Not a directory")
+			return
+		}
+
+		s.sendResponse(session, 550, "Failed to change directory")
+		return
+	}
+
+	s.sendResponse(session, 250, "Directory changed")
+}
+
+func (s *Server) handleRetrCommand(session *Session, file string) {
+	if !session.IsAuthenticated() {
+		s.sendResponse(session, 530, "Not logged in")
+		return
+	}
+
+	if session.dataServer == nil {
+		s.sendResponse(session, 425, "Use PASV first")
+		return
+	}
+
+	s.sendResponse(session, 150, "Opening data connection")
+
+	conn, err := session.dataServer.Accept()
+	if err != nil {
+		s.sendResponse(session, 425, "Failed to open data connection")
+		return
+	}
+	defer conn.Close()
+
+	fd, err := session.RetrieveFile(file)
+	if err != nil {
+		s.sendResponse(session, 550, "Failed to get file")
+		return
+	}
+	defer fd.Close()
+
+	data, err := io.ReadAll(fd)
+	if err != nil {
+		s.sendResponse(session, 550, "Failed to read file")
+		return
+	}
+
+	conn.Write(data)
+
+	s.sendResponse(session, 226, "File send OK")
+}
+
+func (s *Server) handleStorCommand(session *Session, file string) {
+	if !session.IsAuthenticated() {
+		s.sendResponse(session, 530, "Not logged in")
+		return
+	}
+
+	if session.dataServer == nil {
+		s.sendResponse(session, 425, "Use PASV first")
+		return
+	}
+
+	s.sendResponse(session, 150, "Opening data connection")
+
+	conn, err := session.dataServer.Accept()
+	if err != nil {
+		s.sendResponse(session, 425, "Failed to open data connection")
+		return
+	}
+	defer conn.Close()
+
+	data, err := io.ReadAll(conn)
+	if err != nil {
+		s.sendResponse(session, 550, "Failed to read data")
+		return
+	}
+
+	if err := session.StoreFile(file, data); err != nil {
+		s.sendResponse(session, 550, "Failed to store file")
+		return
+	}
+
+	s.sendResponse(session, 226, "File stored OK")
+}
+
+func (s *Server) handleMkdCommand(session *Session, dir string) {
+	if !session.IsAuthenticated() {
+		s.sendResponse(session, 530, "Not logged in")
+		return
+	}
+
+	if err := session.MakeDirectory(dir); err != nil {
+		s.sendResponse(session, 550, "Failed to make directory")
+		return
+	}
+
+	s.sendResponse(session, 257, "Directory created")
+}
+
+func (s *Server) handleRmdCommand(session *Session, dir string) {
+	if !session.IsAuthenticated() {
+		s.sendResponse(session, 530, "Not logged in")
+		return
+	}
+
+	if err := session.DeleteFile(dir); err != nil {
+		s.sendResponse(session, 550, "Failed to delete directory")
+		return
+	}
+
+	s.sendResponse(session, 250, "Directory deleted")
+}
+
+func (s *Server) handleDeleCommand(session *Session, file string) {
+	if !session.IsAuthenticated() {
+		s.sendResponse(session, 530, "Not logged in")
+		return
+	}
+
+	if err := session.DeleteFile(file); err != nil {
+		s.sendResponse(session, 550, "Failed to delete file")
+		return
+	}
+
+	s.sendResponse(session, 250, "File deleted")
+}
+
+func (s *Server) handleQuitCommand(session *Session) {
+	s.sendResponse(session, 221, "Goodbye")
+	session.Close()
 }

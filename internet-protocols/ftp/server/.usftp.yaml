@@ -3,7 +3,10 @@ users:
   - username: "user1"
     password: "password1"
     homedir: "/home/user1"
-# AllowAnonymous: false
+  - username: "user2"
+    password: "password2"
+    homedir: "/home/user2"
+AllowAnonymous: true
 # MinPassivePort: 30000
 # MaxPassivePort: 30010
 # Address: "0.0.0.0"
