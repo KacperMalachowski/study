@@ -10,10 +10,8 @@
             "includePath": [
                 "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/include",
                 "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/src",
-                "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/.pio/libdeps/nodemcuv2/UUID",
+                "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/.pio/libdeps/nodemcuv2/DHT",
                 "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/.pio/libdeps/nodemcuv2/ArduinoJson/src",
-                "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/.pio/libdeps/nodemcuv2/DHT sensor library",
-                "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/.pio/libdeps/nodemcuv2/Adafruit Unified Sensor",
                 "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/.pio/libdeps/nodemcuv2/PicoMQTT/src",
                 "/home/kacper/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266WiFi/src",
                 "/home/kacper/.platformio/packages/framework-arduinoespressif8266/tools/sdk/include",
@@ -65,10 +63,8 @@
                 "path": [
                     "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/include",
                     "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/src",
-                    "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/.pio/libdeps/nodemcuv2/UUID",
+                    "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/.pio/libdeps/nodemcuv2/DHT",
                     "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/.pio/libdeps/nodemcuv2/ArduinoJson/src",
-                    "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/.pio/libdeps/nodemcuv2/DHT sensor library",
-                    "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/.pio/libdeps/nodemcuv2/Adafruit Unified Sensor",
                     "/home/kacper/go/src/github.com/KacperMalachowski/study/iot/temp-humidity/.pio/libdeps/nodemcuv2/PicoMQTT/src",
                     "/home/kacper/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266WiFi/src",
                     "/home/kacper/.platformio/packages/framework-arduinoespressif8266/tools/sdk/include",
