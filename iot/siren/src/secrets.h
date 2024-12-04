@@ -1,4 +1,4 @@
-#define SECRET_SSID "UPC4278225"
-#define SECRET_PASS "ws4kveExnrYt"
-#define SECRET_FALLBACK_SSID "Vivo 21G Kacper"
-#define SECRET_FALLBACK_PASS "studia11"
+#define SECRET_SSID "Vivo 21 G Kacper"
+#define SECRET_PASS "studia11"
+#define MQTT_USER "Alarm_ecbf8"
+#define MQTT_PASS "ecbf8"
